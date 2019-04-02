@@ -6,4 +6,4 @@ export function openChosenTaskErrorDialog()
         type: OPEN_CHOSEN_TASK_ERROR_DIALOG,
         payload: true,
     }
-}   
+}

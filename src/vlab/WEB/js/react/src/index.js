@@ -6,9 +6,6 @@ import thunkMiddleware from 'redux-thunk';
 import storeApp from './reducers';
 import { AppContainer } from 'react-hot-loader';
 import App from './components/App';
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
-import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
-import getMuiTheme from 'material-ui/styles/getMuiTheme';
 
 const middleware = [thunkMiddleware];
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -17,11 +14,9 @@ let store = createStore(storeApp, {}, composeEnhancers(applyMiddleware(...middle
 const render = Component => {
     ReactDOM.render(
         <AppContainer>
-            <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
-                <Provider store={store}>
-                    <App/>
-                </Provider>
-            </MuiThemeProvider>
+            <Provider store={store}>
+                <App/>
+            </Provider>
         </AppContainer>,
         document.getElementById('root'),
     )

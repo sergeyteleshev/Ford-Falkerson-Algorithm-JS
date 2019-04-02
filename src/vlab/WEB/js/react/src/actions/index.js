@@ -1,7 +1,9 @@
-export const TEST_ACTION = "TEST_ACTION";
+export const GO_ANOTHER_TASK = "GO_ANOTHER_TASK";
 
-export function testAction () {
+export function openChosenTaskErrorDialog()
+{
     return {
-        type:TEST_ACTION,
+        type: OPEN_CHOSEN_TASK_ERROR_DIALOG,
+        payload: true,
     }
-}
+}   

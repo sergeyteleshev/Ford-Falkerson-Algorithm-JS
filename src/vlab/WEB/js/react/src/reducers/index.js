@@ -1,12 +1,16 @@
-import {combineReducers } from 'redux';
-import {TEST_ACTION} from "../actions/index";
+import {combineReducers} from 'redux';
 
-function Hello(state = {test:'Hello World, bitch'}, action) {
+let fordFalkersonInitialState = {
+    isCompiledCodeDialogOpened: false,
+};
+
+function Tasks(state = fordFalkersonInitialState, action) {
    switch(action.type) {
-       case TEST_ACTION: let content = state.test === 'Successful'? 'Hello World':'Successful'; return {test:content};
-       default: return state
+
+       default:
+           return state
     }
 }
 
-const storeApp = combineReducers({Hello});
+const storeApp = combineReducers({Tasks});
 export default storeApp;

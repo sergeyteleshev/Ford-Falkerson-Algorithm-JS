@@ -1,6 +1,7 @@
 const path = require('path');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const UglifyJsPlugin = require("uglifyjs-webpack-plugin");
 const webpack = require('webpack');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const NODE_ENV = process.env.NODE_ENV;
@@ -47,8 +48,8 @@ const config = {
 };
 if (NODE_ENV === 'production') {
     config.output = {
-        filename: 'bundle.[hash].js',
-            path: path.resolve(__dirname, './build/')
+        filename: 'ford-falkerson-bundle.js',
+        path: path.resolve(__dirname, '../dev/')
     };
     config.plugins.push(
         new webpack.optimize.ModuleConcatenationPlugin()
@@ -60,19 +61,7 @@ if (NODE_ENV === 'production') {
         })
     );
     config.plugins.push(
-        new webpack.optimize.UglifyJsPlugin({
-            beautify: false,
-            comments: false,
-            compress: {
-                sequences     : true,
-                booleans      : true,
-                loops         : true,
-                unused      : true,
-                warnings    : false,
-                drop_console: true,
-                unsafe      : true
-            }
-        })
+        new UglifyJsPlugin({ sourceMap: true })
     );
     config.plugins.push(
         new webpack.NoEmitOnErrorsPlugin()
@@ -81,34 +70,34 @@ if (NODE_ENV === 'production') {
         new webpack.optimize.OccurrenceOrderPlugin()
     );
     config.plugins.push(
-        new ExtractTextPlugin('styles.[hash].css')
+        new ExtractTextPlugin('../../css/dev/ford-falkerson-styles.css')
     );
+    // config.plugins.push(
+    //     new CleanWebpackPlugin(path.resolve(__dirname, './build/'))
+    // );
     config.plugins.push(
-        new CleanWebpackPlugin(path.resolve(__dirname, './build/'))
-    );
-    config.plugins.push(
-        new HtmlWebpackPlugin({
-            title: 'SEO',
-            template:'./src/template.html',
-            filename:'Background.html',
-            inject:false,
-            source:'',
-            prefix:'{$wa_app_static_url}js/build/'
-        })
+        // new HtmlWebpackPlugin({
+        //     title: 'SEO',
+        //     template:'./src/template.html',
+        //     filename:'index.html',
+        //     inject:false,
+        //     source:'',
+        //     prefix:'./'
+        // })
     );
     config.module.rules.push(
         {
             test:  /\.(sass|scss)$/,
             use: ExtractTextPlugin.extract({
                 fallback: 'style-loader',
-                use: ['css-loader', 'sass-loader']
+                use: ['css-loader', 'sass-loader'],
             })
         });
 
 } else {
     config.output = {
-        filename: 'bundle.js',
-        path: path.resolve(__dirname, './build/'),
+        filename: 'ford-falkerson-bundle.js',
+        path: path.resolve(__dirname, '../dev/'),
         publicPath: '/'
     };
     config.plugins.push(

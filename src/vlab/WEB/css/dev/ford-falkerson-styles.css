@@ -41,121 +41,47 @@ table {
   border-collapse: collapse;
   border-spacing: 0; }
 
-body {
-  background: #212121;
-  font-family: 'Roboto', Helvetica; }
+.node rect,
+.node circle,
+.node ellipse,
+.node polygon {
+  stroke: #333;
+  fill: #fff;
+  stroke-width: 1.5px; }
 
-.tasks-bar {
-  width: 50%;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between; }
-
-.given-data {
-  margin: 0 auto; }
-
-.givenRebraTable {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  flex-direction: column; }
-
-.executeButton {
-  margin-top: 20px; }
-
-.editorButton:not(:nth-child(1)) {
-  margin-left: 8px; }
-
-.givenRebraTable h3 {
-  font-family: Helvetica;
-  margin: 0 auto;
-  margin-bottom: 10px;
-  font-size: 18px;
-  color: white;
-  text-align: center;
-  width: 100%; }
-
-.given-data table {
-  width: 100%;
-  border-collapse: collapse; }
-
-.given-data table tr td {
-  border: 1px solid #FAFAFA;
-  padding: 10px 10px;
-  text-align: center;
-  font-size: 22px;
-  color: white; }
-
-.given-data table tr:first-child td:first-child {
-  white-space: nowrap; }
-
-.given-data table tr:first-child td {
-  color: #E91E63; }
-
-.blue, .given-data table tr td:first-child {
-  color: #4DD0E1; }
-
-.white {
-  color: white; }
-
-.pink {
-  color: #E91E63; }
-
-.tabs {
-  margin-top: 2.5px;
-  width: 100%; }
-
-.ribTables {
-  width: 75%; }
-
-.givenRebraTable h3 {
-  margin-top: 20px; }
-
-.mainBodyRightPart {
-  width: 100%;
+.graph {
   display: flex;
   flex-direction: column;
+  width: 1000px;
+  height: 480px;
+  justify-content: center;
+  align-items: center;
+  margin: 40px auto; }
+
+.selectedNode circle {
+  fill: red; }
+
+.steps {
+  width: 100%;
+  display: inline-flex;
   justify-content: flex-start;
   align-items: center; }
 
-.mainBodyLeftPart {
-  padding-left: 15px; }
+.controlPanel {
+  width: 100%;
+  display: inline-flex;
+  justify-content: flex-end;
+  align-items: center; }
 
-.mainBodyLeftPart, .mainBodyRightPart {
-  margin-top: 20px;
-  width: 100%; }
-
-.mainBody {
+.graphSvg {
+  border: 1px solid black;
+  width: 100%;
+  height: 100%;
   display: flex;
-  flex-direction: row;
-  width: 100%; }
+  justify-content: center;
+  align-items: center; }
 
-#ace_first_task {
-  width: 100%; }
-
-.taskDescDialog img {
-  width: 100%; }
-
-.taskDescDialog p {
-  line-height: 1.3;
-  font-family: Helvetica;
-  width: 100%; }
-
-.taskDescDialog p:first-child {
-  margin-top: 20px; }
-
-.taskDescDialog p:not(:first-child) {
-  margin-top: 15px; }
-
-.taskDescDialog a {
-  color: white; }
-
-.taskDescDialog a:hover {
-  color: #E91E63; }
-
-.green {
-  color: #4caf50; }
-
-.yellow {
-  color: #ffca28; }
+.edgePath path {
+  stroke: #333;
+  fill: #333;
+  stroke-width: 1.5px; }

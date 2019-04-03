@@ -61,10 +61,15 @@ body
   display: flex;
   flex-direction: column;
   width: 1000px;
-  height: 580px;
+  height: 480px;
   justify-content: center;
   align-items: center;
   margin: 40px auto;
+}
+
+.selectedNode circle
+{
+  fill: red;
 }
 
 .steps

@@ -2,33 +2,18 @@ import React from 'react';
 import '../styles.scss';
 
 export default class GraphComponent extends React.Component {
+    constructor(props)
+    {
+        super(props);
+
+        this.state = {
+            selectedNodes: [],
+            selectedEdges: [],
+        };
+    }
+
     componentDidMount()
     {
-        let taskData = {
-            nodes: [1, 2, 3, 4, 5],
-            edges: [
-                [2,3,4],
-                [1,3,5],
-                [1,2,4,5],
-                [1,3,5],
-                [2,3,4],
-            ],
-            bandwidth_up: [
-                [20,30,10],
-                [20,40,30],
-                [30,40,10,20],
-                [10,10,20],
-                [30,20,20],
-            ],
-            bandwidth_down: [
-                [0,0,0],
-                [0,0,0],
-                [0,0,0,0],
-                [0,0,0],
-                [0,0,0],
-            ],
-        };
-
         // Create a new directed graph
         let dagreD3 = require('dagre-d3');
         let d3 = require('d3');
@@ -38,14 +23,14 @@ export default class GraphComponent extends React.Component {
             .setGraph({rankdir: "LR"})
             .setDefaultEdgeLabel(function() { return {}; });
 
-        taskData.nodes.forEach((el, index) => {
+        this.props.data.nodes.forEach((el, index) => {
             g.setNode(index, {shape: 'circle', label: el});
         });
 
-        taskData.edges.forEach((el, index) => {
+        this.props.data.edges.forEach((el, index) => {
             el.forEach((ed, ed_index) => {
                 if(index < ed - 1)
-                    g.setEdge(index, ed - 1, {arrowhead: "undirected", label: taskData.bandwidth_up[index][ed_index] + "/" + taskData.bandwidth_down[index][ed_index]});
+                    g.setEdge(index, ed - 1, {arrowhead: "undirected", label: this.props.data.bandwidth_up[index][ed_index] + "/" + this.props.data.bandwidth_down[index][ed_index]});
             });
         });
 
@@ -61,11 +46,54 @@ export default class GraphComponent extends React.Component {
 
         let nodesList = svg.selectAll("g.node")._groups[0];
         console.log(nodesList);
-        nodesList.forEach((el) => {
-            // el.innerHTML.circle.x = 20;
-            // el.innerHTML.circle.y = 30;
+        nodesList.forEach((el, index) => {
+           el.onclick = () => {
+               let nodeValue = +el.textContent;
+               let selectedNodesCopy = this.state.selectedNodes.slice();
+               console.log(nodeValue);
 
-           el.onclick = () => {console.log(el.textContent)}
+               //если точка уже в нашем пути, то удалить её, если она не разделяет наш путь на два и более несвязных путей
+               //todo криво удаляет точки
+               if(this.state.selectedNodes.length > 0 && this.state.selectedNodes.includes(nodeValue) && nodeValue !== 1)
+               {
+                   if(this.state.selectedNodes[this.state.selectedNodes.length - 1] === nodeValue)
+                   {
+                       el.setAttribute("class", el.getAttribute("class").replace("selectedNode", ""));
+                       selectedNodesCopy.splice(selectedNodesCopy.indexOf(nodeValue), 1);
+                   }
+               }
+               else if(this.state.selectedNodes.length === 0 && nodeValue === 1) // если это первый элемент, то начать новый путь
+               {
+                   el.setAttribute("class", el.getAttribute("class") + " selectedNode");
+                   selectedNodesCopy.push(nodeValue);
+               }
+               else if(nodeValue !== 1) //проверить, есть ли из выбранной ноды ребро в любую ноду из нашего ПУТИ
+               {
+                   let isElementFound = false;
+                   for(let i = 0; i < this.state.selectedNodes.length; i++)
+                   {
+                       for(let j = 0; j < this.props.data.edges[nodeValue-1].length; j++)
+                       {
+                           if(this.props.data.edges[nodeValue-1][j] === this.state.selectedNodes[i])
+                           {
+                               el.setAttribute("class", el.getAttribute("class") + " selectedNode");
+                               selectedNodesCopy.push(nodeValue);
+                               isElementFound = true;
+                               break;
+                           }
+                       }
+
+                       if(isElementFound)
+                           break;
+                   }
+               }
+
+               this.setState({
+                   selectedNodes: selectedNodesCopy,
+               });
+
+               console.log(this.state);
+           }
         });
 
         // Center the graph
@@ -77,16 +105,7 @@ export default class GraphComponent extends React.Component {
     render()
     {
         return (
-            <div className={"graph"}>
-                <div className={"steps"}>
-                    <input type={"button"} value={"+"}/>
-                </div>
-                <svg className={"graphSvg"} width={1000} height={500}/>
-                <div className={"controlPanel"}>
-                    <input type={"button"} value={"Сбросить решение"}/>
-                    <input type={"submit"} value={"Отправить"}/>
-                </div>
-            </div>
+            <svg className={"graphSvg"} width={1000} height={500}/>
         );
     }
 }

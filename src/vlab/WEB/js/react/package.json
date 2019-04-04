@@ -37,6 +37,7 @@
     "d3": "^5.9.2",
     "dagre": "^0.8.4",
     "dagre-d3": "^0.6.3",
+    "graph-theory-ford-fulkerson": "^1.0.0",
     "history": "^4.7.2",
     "jquery": "^3.3.1",
     "mime": "^2.2.0",

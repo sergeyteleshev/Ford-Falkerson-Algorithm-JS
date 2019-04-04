@@ -12,6 +12,11 @@ export default class GraphComponent extends React.Component {
         };
     }
 
+    componentWillMount()
+    {
+        this.setState({data: this.props.data});
+    }
+
     componentDidMount()
     {
         // Create a new directed graph
@@ -23,16 +28,20 @@ export default class GraphComponent extends React.Component {
             .setGraph({rankdir: "LR"})
             .setDefaultEdgeLabel(function() { return {}; });
 
-        this.props.data.nodes.forEach((el, index) => {
+        this.state.data.nodes.forEach((el, index) => {
             g.setNode(index, {shape: 'circle', label: el});
         });
 
-        this.props.data.edges.forEach((el, index) => {
-            el.forEach((ed, ed_index) => {
-                if(index < ed - 1)
-                    g.setEdge(index, ed - 1, {arrowhead: "undirected", label: this.props.data.bandwidth_up[index][ed_index] + "/" + this.props.data.bandwidth_down[index][ed_index]});
-            });
-        });
+        for(let i = 0; i < this.state.data.edges.length; i++)
+        {
+            for(let j = 0; j < this.state.data.edges.length; j++)
+            {
+                if(this.state.data.edges[i][j] > 0)
+                {
+                    g.setEdge(i,j,{label: this.state.data.edges[i][j]});
+                }
+            }
+        }
 
         // Create the renderer
         let render = new dagreD3.render();
@@ -48,36 +57,36 @@ export default class GraphComponent extends React.Component {
         console.log(nodesList);
         nodesList.forEach((el, index) => {
            el.onclick = () => {
-               let nodeValue = +el.textContent;
+               let newNodeValue = +el.textContent;
                let selectedNodesCopy = this.state.selectedNodes.slice();
-               console.log(nodeValue);
+               console.log(newNodeValue);
 
                //если точка уже в нашем пути, то удалить её, если она не разделяет наш путь на два и более несвязных путей
                //todo криво удаляет точки
-               if(this.state.selectedNodes.length > 0 && this.state.selectedNodes.includes(nodeValue) && nodeValue !== 1)
+               if(this.state.selectedNodes.length > 0 && this.state.selectedNodes.includes(newNodeValue))
                {
-                   if(this.state.selectedNodes[this.state.selectedNodes.length - 1] === nodeValue)
+                   if(this.state.selectedNodes[this.state.selectedNodes.length - 1] === newNodeValue)
                    {
                        el.setAttribute("class", el.getAttribute("class").replace("selectedNode", ""));
-                       selectedNodesCopy.splice(selectedNodesCopy.indexOf(nodeValue), 1);
+                       selectedNodesCopy.splice(selectedNodesCopy.indexOf(newNodeValue), 1);
                    }
                }
-               else if(this.state.selectedNodes.length === 0 && nodeValue === 1) // если это первый элемент, то начать новый путь
+               else if(this.state.selectedNodes.length === 0 && newNodeValue === 0) // если это первый элемент, то начать новый путь
                {
                    el.setAttribute("class", el.getAttribute("class") + " selectedNode");
-                   selectedNodesCopy.push(nodeValue);
+                   selectedNodesCopy.push(newNodeValue);
                }
-               else if(nodeValue !== 1) //проверить, есть ли из выбранной ноды ребро в любую ноду из нашего ПУТИ
+               else if(newNodeValue !== 0) //проверить, есть ли из выбранной ноды ребро в любую ноду из нашего ПУТИ
                {
                    let isElementFound = false;
                    for(let i = 0; i < this.state.selectedNodes.length; i++)
                    {
-                       for(let j = 0; j < this.props.data.edges[nodeValue-1].length; j++)
+                       for(let j = 0; j < this.state.data.edges[newNodeValue].length; j++)
                        {
-                           if(this.props.data.edges[nodeValue-1][j] === this.state.selectedNodes[i])
+                           if(this.state.data.edges[j][newNodeValue] > 0 && j === this.state.selectedNodes[i])
                            {
                                el.setAttribute("class", el.getAttribute("class") + " selectedNode");
-                               selectedNodesCopy.push(nodeValue);
+                               selectedNodesCopy.push(newNodeValue);
                                isElementFound = true;
                                break;
                            }
@@ -104,8 +113,17 @@ export default class GraphComponent extends React.Component {
 
     render()
     {
+        let fordFulkerson = require('graph-theory-ford-fulkerson');
         return (
-            <svg className={"graphSvg"} width={1000} height={500}/>
+            <div>
+                <svg className={"graphSvg"} width={1000} height={500}/>
+                <div>
+                    <span>Текущий путь: </span>
+                    <span>{(this.state.selectedNodes.toString())}</span>
+            </div>
+
+                    <p>Максимальный поток данного графа: {fordFulkerson(this.props.data.edges,this.props.data.nodes[0],this.props.data.nodes[this.props.data.nodes.length - 1])}</p>
+            </div>
         );
     }
 }

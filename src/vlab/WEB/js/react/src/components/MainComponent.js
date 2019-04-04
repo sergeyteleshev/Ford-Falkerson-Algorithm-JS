@@ -1,7 +1,7 @@
 import React from 'react';
 import '../styles.scss';
-import taskData from '../consts/variant_1';
 import GraphComponent from "./GraphComponent";
+import graph from "../consts/variant_2";
 
 export default class MainComponent extends React.Component {
     render()
@@ -12,7 +12,7 @@ export default class MainComponent extends React.Component {
                     <div className={"steps"}>
                         <input type={"button"} value={"+"}/>
                     </div>
-                    <GraphComponent data={taskData}/>
+                    <GraphComponent data={graph}/>
                     <div className={"controlPanel"}>
                         <input type={"button"} value={"Сбросить решение"}/>
                         <input type={"submit"} value={"Отправить"}/>

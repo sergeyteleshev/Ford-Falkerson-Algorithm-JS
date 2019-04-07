@@ -61,6 +61,21 @@ body
   cursor: pointer;
 }
 
+.stepsTab
+{
+  display: inline-flex;
+  align-items: center;
+  background: white;
+}
+
+.stepTab-element
+{
+  margin: 5px 5px;
+  padding: 10px 10px;
+  background: gray;
+  color: white;
+}
+
 .graph
 {
   display: flex;

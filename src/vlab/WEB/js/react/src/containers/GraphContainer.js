@@ -1,25 +1,24 @@
 import {connect} from 'react-redux';
-import MainComponent from "../components/MainComponent";
-import {addTab, minEdgeWeight} from "../actions";
+import {addTab, minEdgeWeight, selectNodes} from "../actions";
+import GraphComponent from "../components/GraphComponent";
 
 const mapStateToProps = (state) => {
     return {
         currentTask: state.Tasks.currentTask,
         stepsVariantData: state.Tasks.stepsVariantData,
         currentMinWeight: state.Tasks.currentMinWeight,
-        currentStep: state.Tasks.stepsVariantData,
-        selectedNodes: state.Tasks.selectedNodes,
+        currentStep: state.Tasks.currentStep,
         selectedNodesVariantData: state.Tasks.selectedNodesVariantData,
     }
 };
 
 const mapDispatchToProps = (dispatch)=> {
     return {
-        addTab: (variantData, variantSelectedNodes) => dispatch(addTab(variantData, variantSelectedNodes)),
         minEdgeWeight: (e) => dispatch(minEdgeWeight(e)),
+        selectNodes: (selectedNodes) => dispatch(selectNodes(selectedNodes))
     }
 };
 
-const MainContainer = connect(mapStateToProps, mapDispatchToProps)(MainComponent);
+const GrapContainer = connect(mapStateToProps, mapDispatchToProps)(GraphComponent);
 
-export default MainContainer;
+export default GrapContainer;

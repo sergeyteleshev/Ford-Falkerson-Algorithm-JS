@@ -1,7 +1,5 @@
 import React from 'react';
 import '../styles.scss';
-import GraphComponent from "./GraphComponent";
-import graph from "../consts/variant_1";
 import GraphContainer from "../containers/GraphContainer";
 
 export default class MainComponent extends React.Component {
@@ -16,11 +14,11 @@ export default class MainComponent extends React.Component {
                         <div className={"stepsTab"}>
                             {
                                 variants.map((element, index) => {
-                                    return <div key={index} className={"stepTab-element"}>{index+1}</div>
+                                    return <div key={index} onClick={() => this.props.changeStep(index)} className={"stepTab-element"}>{index+1}</div>
                                 })
                             }
                         </div>
-                        <input onClick={() => {this.props.addTab(this.props.stepsVariantData[this.props.currentStep], this.props.selectedNodesVariantData[this.props.currentStep])}} className={"addStep"} type={"button"} value={"+"}/>
+                        <input onClick={() => this.props.addTab(variants[this.props.currentStep], this.props.currentMinWeight, this.props.selectedNodesVariantData[this.props.currentStep])} className={"addStep"} type={"button"} value={"+"}/>
                     </div>
                     <GraphContainer/>
                     <div className={"controlPanel"}>

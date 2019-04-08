@@ -1,6 +1,6 @@
 import {connect} from 'react-redux';
 import MainComponent from "../components/MainComponent";
-import {addTab, changeStep, minEdgeWeight} from "../actions";
+import {addTab, changeStep, deleteLastTab, minEdgeWeight} from "../actions";
 
 const mapStateToProps = (state) => {
     return {
@@ -15,9 +15,10 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch)=> {
     return {
-        addTab: (data, currentMinWeight, nodesPath) => dispatch(addTab(data, currentMinWeight, nodesPath)),
         minEdgeWeight: (e) => dispatch(minEdgeWeight(e)),
+        addTab: (data, currentMinWeight, nodesPath) => dispatch(addTab(data, currentMinWeight, nodesPath)),
         changeStep: (index) => dispatch(changeStep(index)),
+        deleteLastTab: () => dispatch(deleteLastTab()),
     }
 };
 

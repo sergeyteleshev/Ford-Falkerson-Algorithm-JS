@@ -21,7 +21,7 @@ export default class GraphComponent extends React.Component {
         {
             for(let j = 0; j < this.props.stepsVariantData[this.props.currentStep].edges.length; j++)
             {
-                if(this.props.stepsVariantData[this.props.currentStep].edges[i][j] > 0)
+                if(this.props.stepsVariantData[this.props.currentStep].frame[i][j] > 0)
                 {
                     g.setEdge(i,j,{label: this.props.stepsVariantData[this.props.currentStep].edges[i][j] + "/" + this.props.stepsVariantData[this.props.currentStep].edgesBack[i][j], arrowhead: "undirected"});
                 }
@@ -122,7 +122,7 @@ export default class GraphComponent extends React.Component {
                 <div>
                     <span>Текущий путь: </span>
                     <span>{this.props.selectedNodesVariantData[this.props.currentStep].toString()}</span>
-            </div>
+                </div>
 
                     <p>Максимальный поток данного графа: {
                         fordFulkerson(

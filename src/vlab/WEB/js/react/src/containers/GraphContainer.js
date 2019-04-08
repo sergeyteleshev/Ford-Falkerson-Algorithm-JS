@@ -1,5 +1,5 @@
 import {connect} from 'react-redux';
-import {addTab, minEdgeWeight, selectNodes} from "../actions";
+import {minEdgeWeight, selectNodes} from "../actions";
 import GraphComponent from "../components/GraphComponent";
 
 const mapStateToProps = (state) => {

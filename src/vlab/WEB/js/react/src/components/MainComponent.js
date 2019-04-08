@@ -6,6 +6,7 @@ export default class MainComponent extends React.Component {
     render()
     {
         let variants = [...this.props.stepsVariantData];
+        let newSelectedNodesVariantData = [...this.props.selectedNodesVariantData];
 
         return (
             <div>
@@ -14,11 +15,12 @@ export default class MainComponent extends React.Component {
                         <div className={"stepsTab"}>
                             {
                                 variants.map((element, index) => {
-                                    return <div key={index} onClick={() => this.props.changeStep(index)} className={"stepTab-element"}>{index+1}</div>
+                                    return <div className={"stepTab-element"}>{index+1}</div>
                                 })
                             }
                         </div>
-                        <input onClick={() => this.props.addTab(variants[this.props.currentStep], this.props.currentMinWeight, this.props.selectedNodesVariantData[this.props.currentStep])} className={"addStep"} type={"button"} value={"+"}/>
+                        <input onClick={() => this.props.addTab(variants[this.props.currentStep], this.props.currentMinWeight, newSelectedNodesVariantData[this.props.currentStep])} className={"addStep"} type={"button"} value={"+"}/>
+                        {this.props.selectedNodesVariantData.length > 1 ? <input onClick={() => this.props.deleteLastTab()} type={"button"} value={"-"}/> : null}
                     </div>
                     <GraphContainer/>
                     <div className={"controlPanel"}>

@@ -1,6 +1,6 @@
 import {combineReducers} from 'redux';
 import graph from '../consts/variant_2';
-import {ADD_TAB, CHANGE_STEP, MIN_EDGE_WEIGHT_HANDLE_CHANGE, SELECT_NODES} from "../actions";
+import {ADD_TAB, CHANGE_STEP, DELETE_LAST_TAB, MIN_EDGE_WEIGHT_HANDLE_CHANGE, SELECT_NODES} from "../actions";
 
 let fordFalkersonInitialState = {
     stepsVariantData: [graph],
@@ -13,12 +13,30 @@ let fordFalkersonInitialState = {
 function Tasks(state = fordFalkersonInitialState, action) {
    switch(action.type) {
        case ADD_TAB:
+           let newAddTabStepsVariantData = [...state.stepsVariantData];
+           newAddTabStepsVariantData.push(action.payload);
+
            return {
                ...state,
                currentStep: state.currentStep + 1,
-               stepsVariantData: [...state.stepsVariantData, action.payload],
+               stepsVariantData: newAddTabStepsVariantData,
                selectedNodesVariantData: [...state.selectedNodesVariantData, []],
+               currentMinWeight: 0,
            };
+
+       case DELETE_LAST_TAB:
+           let newStepsVariantData = [...state.stepsVariantData];
+           let newSelectedNodesVariantData = [...state.selectedNodesVariantData];
+           newStepsVariantData.pop();
+           newSelectedNodesVariantData.pop();
+           return {
+               ...state,
+               currentStep: state.currentStep - 1,
+               stepsVariantData: newStepsVariantData,
+               selectedNodesVariantData: newSelectedNodesVariantData,
+               currentMinWeight: 0,
+           };
+
 
        case MIN_EDGE_WEIGHT_HANDLE_CHANGE:
            return {

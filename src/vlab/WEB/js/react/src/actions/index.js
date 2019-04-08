@@ -2,9 +2,11 @@ export const ADD_TAB = "ADD_TAB";
 export const MIN_EDGE_WEIGHT_HANDLE_CHANGE = "MIN_EDGE_WEIGHT_HANDLE_CHANGE";
 export const SELECT_NODES = "SELECT_NODES";
 export const CHANGE_STEP = "CHANGE_STEP";
+export const DELETE_LAST_TAB = "DELETE_LAST_TAB";
 
 export function addTab(data, currentMinWeight, nodesPath)
 {
+    console.log('data', data, currentMinWeight, nodesPath);
     currentMinWeight = parseInt(currentMinWeight);
     for (let i = 0; i < nodesPath.length - 1; i++)
     {
@@ -15,6 +17,13 @@ export function addTab(data, currentMinWeight, nodesPath)
     return {
         type: ADD_TAB,
         payload: data,
+    }
+}
+
+export function deleteLastTab()
+{
+    return {
+        type: DELETE_LAST_TAB,
     }
 }
 

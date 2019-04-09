@@ -16,7 +16,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch)=> {
     return {
         minEdgeWeight: (e) => dispatch(minEdgeWeight(e)),
-        addTab: (data, currentMinWeight, nodesPath) => dispatch(addTab(data, currentMinWeight, nodesPath)),
+        addTab: () => dispatch(addTab()),
         changeStep: (index) => dispatch(changeStep(index)),
         deleteLastTab: () => dispatch(deleteLastTab()),
     }

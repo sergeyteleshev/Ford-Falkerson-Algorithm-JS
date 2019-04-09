@@ -5,22 +5,23 @@ import GraphContainer from "../containers/GraphContainer";
 export default class MainComponent extends React.Component {
     render()
     {
-        let variants = [...this.props.stepsVariantData];
-        let newSelectedNodesVariantData = [...this.props.selectedNodesVariantData];
-
         return (
             <div>
                 <div className={"graph"}>
                     <div className={"steps"}>
                         <div className={"stepsTab"}>
                             {
-                                variants.map((element, index) => {
-                                    return <div className={"stepTab-element"}>{index+1}</div>
+                                this.props.stepsVariantData.map((element, index) => {
+                                    let selectTab = "";
+                                    if(index === this.props.currentStep)
+                                        selectTab = " selectTab";
+
+                                    return <div onClick={() => this.props.changeStep(index)} className={"stepTab-element" + selectTab}>{index+1}</div>
                                 })
                             }
                         </div>
-                        <input onClick={() => this.props.addTab(variants[this.props.currentStep], this.props.currentMinWeight, newSelectedNodesVariantData[this.props.currentStep])} className={"addStep"} type={"button"} value={"+"}/>
-                        {this.props.selectedNodesVariantData.length > 1 ? <input onClick={() => this.props.deleteLastTab()} type={"button"} value={"-"}/> : null}
+                        {this.props.currentStep === this.props.stepsVariantData.length - 1 ? <input onClick={() => this.props.addTab()} className={"addStep"} type={"button"} value={"+"}/> : null}
+                        {this.props.selectedNodesVariantData.length > 1 && this.props.currentStep === this.props.stepsVariantData.length - 1 ? <input onClick={() => this.props.deleteLastTab()} type={"button"} value={"-"}/> : null}
                     </div>
                     <GraphContainer/>
                     <div className={"controlPanel"}>

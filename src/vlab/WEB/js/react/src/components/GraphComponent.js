@@ -21,9 +21,9 @@ export default class GraphComponent extends React.Component {
         {
             for(let j = 0; j < this.props.stepsVariantData[this.props.currentStep].edges.length; j++)
             {
-                if(this.props.stepsVariantData[this.props.currentStep].frame[i][j] > 0)
+                if(this.props.stepsVariantData[this.props.currentStep].edges[i][j] > 0)
                 {
-                    g.setEdge(i,j,{label: this.props.stepsVariantData[this.props.currentStep].edges[i][j] + "/" + this.props.stepsVariantData[this.props.currentStep].edgesBack[i][j], arrowhead: "undirected"});
+                    g.setEdge(i,j,{label: this.props.stepsVariantData[this.props.currentStep].edges[i][j] + "/" + this.props.stepsVariantData[this.props.currentStep].edges[j][i], arrowhead: "normal"});
                 }
             }
         }
@@ -51,7 +51,6 @@ export default class GraphComponent extends React.Component {
                let selectedNodesCopy = this.props.selectedNodesVariantData[this.props.currentStep].slice();
 
                //если точка уже в нашем пути, то удалить её, если она не разделяет наш путь на два и более несвязных путей
-               //todo криво удаляет точки
                if(this.props.selectedNodesVariantData[this.props.currentStep].length > 0 && this.props.selectedNodesVariantData[this.props.currentStep].includes(newNodeValue))
                {
                    if(this.props.selectedNodesVariantData[this.props.currentStep][this.props.selectedNodesVariantData[this.props.currentStep].length - 1] === newNodeValue)

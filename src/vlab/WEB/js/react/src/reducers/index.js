@@ -3,7 +3,7 @@ import graph from '../consts/variant_2';
 import {ADD_TAB, CHANGE_STEP, DELETE_LAST_TAB, MIN_EDGE_WEIGHT_HANDLE_CHANGE, SELECT_NODES} from "../actions";
 
 let fordFalkersonInitialState = {
-    stepsVariantData: [graph],
+    stepsVariantData: [{...graph}],
     selectedNodesVariantData: [[]],
     selectedEdgesVariantData: [[]],
     currentStep: 0,
@@ -13,13 +13,17 @@ let fordFalkersonInitialState = {
 function Tasks(state = fordFalkersonInitialState, action) {
    switch(action.type) {
        case ADD_TAB:
-           let newAddTabStepsVariantData = [...state.stepsVariantData];
-           newAddTabStepsVariantData.push(action.payload);
+           let addTabData = JSON.parse(JSON.stringify(state.stepsVariantData[state.currentStep]))   ;
+           for (let i = 0; i < state.selectedNodesVariantData[state.currentStep].length - 1; i++)
+           {
+               addTabData.edges[state.selectedNodesVariantData[state.currentStep][i]][state.selectedNodesVariantData[state.currentStep][i+1]] -= +state.currentMinWeight;
+               addTabData.edgesBack[state.selectedNodesVariantData[state.currentStep][i]][state.selectedNodesVariantData[state.currentStep][i+1]] += +state.currentMinWeight;
+           }
 
            return {
                ...state,
                currentStep: state.currentStep + 1,
-               stepsVariantData: newAddTabStepsVariantData,
+               stepsVariantData: [...state.stepsVariantData, addTabData],
                selectedNodesVariantData: [...state.selectedNodesVariantData, []],
                currentMinWeight: 0,
            };

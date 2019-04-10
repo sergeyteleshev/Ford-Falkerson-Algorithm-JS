@@ -10,13 +10,14 @@ const mapStateToProps = (state) => {
         currentStep: state.Tasks.currentStep,
         selectedNodes: state.Tasks.selectedNodes,
         selectedNodesVariantData: state.Tasks.selectedNodesVariantData,
+        currentMinWeightData: state.Tasks.currentMinWeightData,
     }
 };
 
 const mapDispatchToProps = (dispatch)=> {
     return {
         minEdgeWeight: (e) => dispatch(minEdgeWeight(e)),
-        addTab: () => dispatch(addTab()),
+        addTab: (data, minEdgeWeight, nodesPath) => dispatch(addTab(data, minEdgeWeight, nodesPath)),
         changeStep: (index) => dispatch(changeStep(index)),
         deleteLastTab: () => dispatch(deleteLastTab()),
     }

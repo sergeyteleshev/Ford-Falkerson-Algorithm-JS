@@ -9,6 +9,8 @@ const mapStateToProps = (state) => {
         currentMinWeight: state.Tasks.currentMinWeight,
         currentStep: state.Tasks.currentStep,
         selectedNodesVariantData: state.Tasks.selectedNodesVariantData,
+        graphSkeleton: state.Tasks.graphSkeleton,
+        currentMinWeightData: state.Tasks.currentMinWeightData,
     }
 };
 

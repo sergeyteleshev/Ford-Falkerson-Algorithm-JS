@@ -7,6 +7,7 @@ import storeApp from './reducers';
 import { AppContainer } from 'react-hot-loader';
 import App from './components/App';
 
+require('bootstrap');
 const middleware = [thunkMiddleware];
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 let store = createStore(storeApp, {}, composeEnhancers(applyMiddleware(...middleware)));

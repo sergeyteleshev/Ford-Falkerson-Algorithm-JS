@@ -21,9 +21,9 @@ export default class GraphComponent extends React.Component {
         {
             for(let j = 0; j < this.props.stepsVariantData[this.props.currentStep].edges.length; j++)
             {
-                if(this.props.stepsVariantData[this.props.currentStep].edges[i][j] > 0)
+                if(this.props.graphSkeleton[i][j] > 0)
                 {
-                    g.setEdge(i,j,{label: this.props.stepsVariantData[this.props.currentStep].edges[i][j] + "/" + this.props.stepsVariantData[this.props.currentStep].edges[j][i], arrowhead: "normal"});
+                    g.setEdge(i,j,{label: this.props.stepsVariantData[this.props.currentStep].edges[i][j] + "/" + this.props.stepsVariantData[this.props.currentStep].edgesBack[i][j], arrowhead: "normal"});
                 }
             }
         }
@@ -69,7 +69,13 @@ export default class GraphComponent extends React.Component {
                    {
                        for(let j = 0; j < this.props.stepsVariantData[this.props.currentStep].edges[newNodeValue].length; j++)
                        {
-                           if(this.props.stepsVariantData[this.props.currentStep].edges[j][newNodeValue] > 0 && j === this.props.selectedNodesVariantData[this.props.currentStep][i])
+                           if((this.props.stepsVariantData[this.props.currentStep].edges[j][newNodeValue] > 0 && j === this.props.selectedNodesVariantData[this.props.currentStep][i]))
+                           {
+                               selectedNodesCopy.push(newNodeValue);
+                               isElementFound = true;
+                               break;
+                           }
+                           else if((this.props.stepsVariantData[this.props.currentStep].edgesBack[newNodeValue][j] > 0 && j === this.props.selectedNodesVariantData[this.props.currentStep][i]))
                            {
                                selectedNodesCopy.push(newNodeValue);
                                isElementFound = true;
@@ -125,7 +131,7 @@ export default class GraphComponent extends React.Component {
 
                     <p>Максимальный поток данного графа: {
                         fordFulkerson(
-                            this.props.stepsVariantData[this.props.currentStep].edges,
+                            this.props.graphSkeleton,
                             this.props.stepsVariantData[this.props.currentStep].nodes[0],
                             this.props.stepsVariantData[this.props.currentStep].nodes[this.props.stepsVariantData[this.props.currentStep].nodes.length - 1]
                         )

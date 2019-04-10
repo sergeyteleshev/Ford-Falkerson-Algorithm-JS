@@ -42,7 +42,7 @@ const config = {
         }),
         new webpack.ProvidePlugin({
             $: 'jquery',
-        })
+        }),
     ]
 };
 if (NODE_ENV === 'production') {

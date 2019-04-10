@@ -4,10 +4,26 @@ export const SELECT_NODES = "SELECT_NODES";
 export const CHANGE_STEP = "CHANGE_STEP";
 export const DELETE_LAST_TAB = "DELETE_LAST_TAB";
 
-export function addTab()
+export function addTab(data, minEdgeWeight, nodesPath)
 {
+    let addTabData = JSON.parse(JSON.stringify(data));
+    for (let i = 0; i < nodesPath.length - 1; i++)
+    {
+        if(nodesPath[i] < nodesPath[i+1])
+        {
+            addTabData.edges[nodesPath[i]][nodesPath[i+1]] -= +minEdgeWeight;
+            addTabData.edgesBack[nodesPath[i]][nodesPath[i+1]] += +minEdgeWeight;
+        }
+        else
+        {
+            addTabData.edges[nodesPath[i+1]][nodesPath[i]] += +minEdgeWeight;
+            addTabData.edgesBack[nodesPath[i+1]][nodesPath[i]] -= +minEdgeWeight;
+        }
+    }
+
     return {
         type: ADD_TAB,
+        payload: addTabData,
     }
 }
 

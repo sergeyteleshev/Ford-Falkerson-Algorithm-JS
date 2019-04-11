@@ -119,23 +119,9 @@ export default class GraphComponent extends React.Component {
 
     render()
     {
-        const fordFulkerson = require('graph-theory-ford-fulkerson');
-
         return (
-            <div>
+            <div className={"graphComponent"}>
                 <svg className={"graphSvg"} width={1000} height={500}/>
-                <div>
-                    <span>Текущий путь: </span>
-                    <span>{this.props.selectedNodesVariantData[this.props.currentStep].toString()}</span>
-                </div>
-
-                    <p>Максимальный поток данного графа: {
-                        fordFulkerson(
-                            this.props.graphSkeleton,
-                            this.props.stepsVariantData[this.props.currentStep].nodes[0],
-                            this.props.stepsVariantData[this.props.currentStep].nodes[this.props.stepsVariantData[this.props.currentStep].nodes.length - 1]
-                        )
-                    }</p>
             </div>
         );
     }

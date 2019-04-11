@@ -1,5 +1,5 @@
 import {combineReducers} from 'redux';
-import graph from '../consts/variant_3';
+import graph from '../consts/variant_2';
 import {ADD_TAB, CHANGE_STEP, DELETE_LAST_TAB, MIN_EDGE_WEIGHT_HANDLE_CHANGE, SELECT_NODES} from "../actions";
 
 let fordFalkersonInitialState = {

@@ -12,7 +12,7 @@ const middleware = [thunkMiddleware];
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 let store = createStore(storeApp, {}, composeEnhancers(applyMiddleware(...middleware)));
 
-const render = Component => {
+const render = () => {
     ReactDOM.render(
         <AppContainer>
             <Provider store={store}>
@@ -36,12 +36,12 @@ if(NODE_ENV==='development') {
 
     //HOT MODULE
 
-    render(App);
+    render();
     if (module.hot) {
-        module.hot.accept('./components/App', () => { render(App) })
+        module.hot.accept('./components/App', () => { render() })
     }
 }
 else if(NODE_ENV==='production')
 {
-    render(App);
+    render();
 }

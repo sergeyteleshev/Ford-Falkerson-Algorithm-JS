@@ -43,7 +43,7 @@ export default class MainComponent extends React.Component {
                         </div>
 
                         <div className={"controlPanel"}>
-                            <input type={"number"} className={"textInputGray"} onChange={(e) => this.props.minEdgeWeight(e)} value={this.props.currentMinWeightData[this.props.currentStep]} placeholder={"минимальный вес ребра потока"}/>
+                            <input type={"number"} className={"textInputGray"} onChange={(e) => this.props.minEdgeWeight(e)} value={this.props.currentMinWeightData[this.props.currentStep]} placeholder={"минимальный вес ребра потока"} disabled={this.props.currentStep !== (this.props.stepsVariantData.length - 1)}/>
                             <input type={"button"} className={"btnGray"} value={"Сбросить решение"}/>
                             <input type={"submit"} className={"btnGray"} value={"Отправить"}/>
                         </div>

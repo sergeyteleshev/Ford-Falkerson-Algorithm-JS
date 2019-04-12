@@ -41,13 +41,71 @@ table {
   border-collapse: collapse;
   border-spacing: 0; }
 
+body {
+  font-family: Calibri, serif; }
+
 .node rect,
 .node circle,
 .node ellipse,
 .node polygon {
   stroke: #333;
-  fill: #fff;
+  fill: #eeeeee;
   stroke-width: 1.5px; }
+
+.node circle:hover {
+  cursor: pointer; }
+
+.stepsTab {
+  display: inline-flex;
+  align-items: center;
+  background: white; }
+
+.addStep, .minusStep {
+  margin-left: 10px;
+  width: 35px;
+  height: 35px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  color: white; }
+
+.minusStep {
+  background-color: #cb342b; }
+
+.minusStep:hover {
+  background-color: #fa342b; }
+
+.addStep {
+  background-color: #439847; }
+
+.addStep:hover {
+  background-color: #43ad47; }
+
+.stepTab-element:hover {
+  text-decoration: underline; }
+
+.stepTab-element {
+  margin: 5px 5px;
+  padding: 10px 10px;
+  cursor: pointer;
+  background: #f5f5f5;
+  color: black;
+  width: 15px;
+  height: 15px;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center; }
+
+.selectTab {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+  background-color: #42b4d9; }
 
 .graph {
   display: flex;
@@ -56,10 +114,16 @@ table {
   height: 480px;
   justify-content: center;
   align-items: center;
-  margin: 40px auto; }
+  margin: 60px auto; }
 
 .selectedNode circle {
-  fill: red; }
+  fill: #f54b3e; }
+
+.labBottom {
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%; }
 
 .steps {
   width: 100%;
@@ -67,14 +131,30 @@ table {
   justify-content: flex-start;
   align-items: center; }
 
+.graphComponent {
+  margin: 10px auto; }
+
 .controlPanel {
-  width: 100%;
+  width: 440px;
   display: inline-flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center; }
 
+.textInputGray {
+  padding: 5px 10px; }
+
+.btnGray {
+  cursor: pointer;
+  border: 2px solid #e1e1e1;
+  background: #e6e6e6;
+  padding: 10px 10px;
+  border-radius: 5px; }
+
+.btnGray:hover {
+  background: #e6f6e6; }
+
 .graphSvg {
-  border: 1px solid black;
+  border: 2px solid #e6e6e6;
   width: 100%;
   height: 100%;
   display: flex;

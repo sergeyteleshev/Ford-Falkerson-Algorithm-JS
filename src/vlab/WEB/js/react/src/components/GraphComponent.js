@@ -64,27 +64,18 @@ export default class GraphComponent extends React.Component {
                }
                else if(newNodeValue !== 0) //проверить, есть ли из выбранной ноды ребро в любую ноду из нашего ПУТИ
                {
-                   let isElementFound = false;
-                   for(let i = 0; i < this.props.selectedNodesVariantData[this.props.currentStep].length; i++)
+                   for(let j = 0; j < this.props.stepsVariantData[this.props.currentStep].edges[newNodeValue].length; j++)
                    {
-                       for(let j = 0; j < this.props.stepsVariantData[this.props.currentStep].edges[newNodeValue].length; j++)
+                       if((this.props.stepsVariantData[this.props.currentStep].edges[j][newNodeValue] > 0 && j === this.props.selectedNodesVariantData[this.props.currentStep][this.props.selectedNodesVariantData[this.props.currentStep].length - 1]))
                        {
-                           if((this.props.stepsVariantData[this.props.currentStep].edges[j][newNodeValue] > 0 && j === this.props.selectedNodesVariantData[this.props.currentStep][i]))
-                           {
-                               selectedNodesCopy.push(newNodeValue);
-                               isElementFound = true;
-                               break;
-                           }
-                           else if((this.props.stepsVariantData[this.props.currentStep].edgesBack[newNodeValue][j] > 0 && j === this.props.selectedNodesVariantData[this.props.currentStep][i]))
-                           {
-                               selectedNodesCopy.push(newNodeValue);
-                               isElementFound = true;
-                               break;
-                           }
-                       }
-
-                       if(isElementFound)
+                           selectedNodesCopy.push(newNodeValue);
                            break;
+                       }
+                       else if((this.props.stepsVariantData[this.props.currentStep].edgesBack[newNodeValue][j] > 0 && j === this.props.selectedNodesVariantData[this.props.currentStep][this.props.selectedNodesVariantData[this.props.currentStep].length - 1]))
+                       {
+                           selectedNodesCopy.push(newNodeValue);
+                           break;
+                       }
                    }
                }
 

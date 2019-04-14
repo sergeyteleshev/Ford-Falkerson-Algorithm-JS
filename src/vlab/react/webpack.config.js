@@ -47,8 +47,8 @@ const config = {
 };
 if (NODE_ENV === 'production') {
     config.output = {
-        filename: 'ford-falkerson-bundle.js',
-        path: path.resolve(__dirname, '../js/dev/')
+        filename: 'z-ford-falkerson-bundle.js',
+        path: path.resolve(__dirname, '../WEB/js/dev/')
     };
     config.plugins.push(
         new webpack.optimize.ModuleConcatenationPlugin()
@@ -69,7 +69,7 @@ if (NODE_ENV === 'production') {
         new webpack.optimize.OccurrenceOrderPlugin()
     );
     config.plugins.push(
-        new ExtractTextPlugin('../../css/dev/ford-falkerson-styles.css')
+        new ExtractTextPlugin('../../css/dev/z-ford-falkerson-styles.css')
     );
     config.module.rules.push(
         {
@@ -82,7 +82,7 @@ if (NODE_ENV === 'production') {
 
 } else {
     config.output = {
-        filename: 'ford-falkerson-bundle.js',
+        filename: 'z-ford-falkerson-bundle.js',
         path: path.resolve(__dirname, '../dev/'),
         publicPath: '/'
     };

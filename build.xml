@@ -268,10 +268,10 @@
             &lt;/head&gt;
             &lt;body&gt;
             &lt;div id="jsLab"&gt;&lt;/div&gt;
-            &lt;div id="root"&gt;&lt;/div&gt;
-            &lt;input type="text" value="genfake" id="preGeneratedCode"/&gt;
-            &lt;input type="text" value="calcfake" id="calculatedCode"/&gt;
-            &lt;input type="text" value="prevsolfake" id="previousSolution"/&gt;
+            <!--&lt;div id="root"&gt;&lt;/div&gt;-->
+            <!--&lt;input type="text" value="genfake" id="preGeneratedCode"/&gt;-->
+            <!--&lt;input type="text" value="calcfake" id="calculatedCode"/&gt;-->
+            <!--&lt;input type="text" value="prevsolfake" id="previousSolution"/&gt;-->
         </echo>
 
         <foreach target="injection.JS" param="file.name">

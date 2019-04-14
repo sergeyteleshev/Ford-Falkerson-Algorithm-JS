@@ -1,4 +1,4 @@
-let Vlab = {
+var Vlab = {
 
     div : null,
 
@@ -9,15 +9,18 @@ let Vlab = {
     //Инициализация ВЛ
     init : function(){
         this.div = document.getElementById("jsLab");
-        this.div.innerHTML = this.window;
-        document.getElementById("tool").innerHTML = this.tool;
+        // this.div.innerHTML = this.window;
+        // document.getElementById("tool").innerHTML = this.tool;
 
         //получение варианта задания
-        let ins = document.getElementById("preGeneratedCode").value;
+        let ins = document.getElementById("preGeneratedCode").value + " " + document.getElementById("calculatedCode").value +
+            " " + document.getElementById("previousSolution").value;
+
+        this.div.innerHTML = ins;
     },
 
     getCondition: function(){},
-    getResults: function(){},
+    getResults: function(){ return "results"},
     calculateHandler: function(text, code){},
 };
 

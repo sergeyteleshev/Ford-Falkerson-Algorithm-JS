@@ -100,7 +100,14 @@ function getHTML(templateData) {
     let stepButtons = "";
     for(let i = 0; i < templateData.currentStep + 1; i++)
     {
-        stepButtons += `<div class="stepTab-element">${i + 1}</div>`;
+        if(templateData.currentStep === i)
+        {
+            stepButtons += `<div class="stepTab-element selectTab">${i + 1}</div>`;
+        }
+        else
+        {
+            stepButtons += `<div class="stepTab-element">${i + 1}</div>`;
+        }
     }
 
     return `
@@ -121,13 +128,11 @@ function getHTML(templateData) {
                         <span>Текущий путь: </span>
                         <span>${templateData.selectedNodesVariantData}</span>
                     </div>
-                    <p>Максимальный поток данного графа: "${templateData.fordFulkerson}
+                    <p>Максимальный поток данного графа: ${templateData.fordFulkerson}
                     </p>
                 </div>
                 <div class="controlPanel">
-                    <input type="number" class="textInputGray"/>
-                    <input type="button" class="btnGray" value="Сбросить решение"/>
-                    <input type="submit" class="btnGray" value="Отправить"/>
+                    <input type="number" class="textInputGray"/>                   
                 </div>
             </div>
         </div>`;
@@ -141,7 +146,6 @@ function initState(graph) {
     let _state = {
         stepsVariantData: [{...graph}],
         selectedNodesVariantData: [[]],
-        selectedEdgesVariantData: [[]],
         currentStep: 0,
         currentMinWeight: 0,
         currentMinWeightData: [""],
@@ -195,34 +199,161 @@ function bindActionListeners(appInstance)
             return  {
                 ...state,
                 currentStep,
-                stepsVariantData: [...state.stepsVariantData, stepsVariantData]
+                stepsVariantData: [...state.stepsVariantData, stepsVariantData],
+                selectedNodesVariantData: [...state.selectedNodesVariantData, []],
             }
         });
 
         // перересовываем приложение
         appInstance.subscriber.emit('render', state);
+        renderDag(state, appInstance);
     });
 
     document.getElementsByClassName("minusStep")[0].addEventListener('click', () => {
         // обновляем стейт приложение
         const state = appInstance.state.updateState((state) => {
-            const currentStep = state.currentStep -= 1;
-            let stepsVariantData = JSON.parse(JSON.stringify(state.stepsVariantData));
-            stepsVariantData.pop();
+            if(state.currentStep > 0)
+            {
+                const currentStep = state.currentStep -= 1;
+                let stepsVariantData = JSON.parse(JSON.stringify(state.stepsVariantData));
+                stepsVariantData.pop();
+
+                return  {
+                    ...state,
+                    currentStep,
+                    stepsVariantData: stepsVariantData,
+                }
+            }
 
             return  {
                 ...state,
-                currentStep,
-                stepsVariantData: stepsVariantData,
             }
         });
 
         // перересовываем приложение
         appInstance.subscriber.emit('render', state);
+        renderDag(state, appInstance);
+    });
+
+    document.getElementsByClassName("stepTab-element")[0].addEventListener('click', () => {
+        const state = appInstance.state.updateState((state) => {
+            console.log(document.getElementsByClassName("stepTab-element"), 'val');
+            return  {
+                ...state,
+            }
+        });
+
+        appInstance.subscriber.emit('render', state);
+    });
+
+    document.getElementsByClassName("stepTab-element")[0].addEventListener('click', () => {
+
+    });
+
+    let svg = d3.select("svg");
+    let nodesList = svg.selectAll("g.node")._groups[0];
+
+    nodesList.forEach((el, index) => {
+        el.addEventListener('click', () => {
+            const state = appInstance.state.updateState((state) => {
+                console.log(el);
+                let newNodeValue = +el.textContent;
+                console.log(newNodeValue);
+                let selectedNodesCopy = [...state.selectedNodesVariantData[state.currentStep]];
+
+                //если точка уже в нашем пути, то удалить её, если она не разделяет наш путь на два и более несвязных путей
+                if (state.selectedNodesVariantData[state.currentStep].length > 0 && state.selectedNodesVariantData[state.currentStep].includes(newNodeValue)) {
+                    if (state.selectedNodesVariantData[state.currentStep][state.selectedNodesVariantData[state.currentStep].length - 1] === newNodeValue) {
+                        selectedNodesCopy.splice(selectedNodesCopy.indexOf(newNodeValue), 1);
+                    }
+                }
+                else if (state.selectedNodesVariantData[state.currentStep].length === 0 && newNodeValue === 0) // если это первый элемент, то начать новый путь
+                {
+                    selectedNodesCopy.push(newNodeValue);
+                }
+                else if (newNodeValue !== 0) //проверить, есть ли из выбранной ноды ребро в любую ноду из нашего ПУТИ
+                {
+                    for (let j = 0; j < state.stepsVariantData[state.currentStep].edges[newNodeValue].length; j++) {
+                        if ((state.stepsVariantData[state.currentStep].edges[j][newNodeValue] > 0 && j === state.selectedNodesVariantData[state.currentStep][state.selectedNodesVariantData[state.currentStep].length - 1])) {
+                            selectedNodesCopy.push(newNodeValue);
+                            break;
+                        } else if ((state.stepsVariantData[state.currentStep].edgesBack[newNodeValue][j] > 0 && j === state.selectedNodesVariantData[state.currentStep][state.selectedNodesVariantData[state.currentStep].length - 1])) {
+                            selectedNodesCopy.push(newNodeValue);
+                            break;
+                        }
+                    }
+                }
+
+                state.selectedNodesVariantData[state.currentStep] = JSON.parse(JSON.stringify(selectedNodesCopy));
+
+                appInstance.subscriber.emit('render', state);
+                renderDag(state,appInstance);
+
+                return  {
+                    ...state,
+                };
+            });
+        });
     });
 }
 
+function renderDag(state, appInstance) {
+    // Create the input graph
+    let g = new dagreD3.graphlib.Graph()
+        .setGraph({rankdir: "LR"})
+        .setDefaultEdgeLabel(function () {
+            return {};
+        });
+
+    state.stepsVariantData[state.currentStep].nodes.forEach((el, index) => {
+        g.setNode(index, {shape: 'circle', label: el});
+    });
+
+    for (let i = 0; i < state.stepsVariantData[state.currentStep].edges.length; i++) {
+        for (let j = 0; j < state.stepsVariantData[state.currentStep].edges.length; j++) {
+            if (state.graphSkeleton[i][j] > 0) {
+                g.setEdge(i, j, {
+                    label: state.stepsVariantData[state.currentStep].edges[i][j] + "/" + state.stepsVariantData[state.currentStep].edgesBack[i][j],
+                    arrowhead: "normal"
+                });
+            }
+        }
+    }
+
+    // Create the renderer
+    let render = new dagreD3.render();
+
+    // Set up an SVG group so that we can translate the final graph.
+    let svg = d3.select("svg"),
+        svgGroup = svg.append("g");
+
+    let nodesList = svg.selectAll("g.node")._groups[0];
+
+    //очистка всех выделенных точек
+    nodesList.forEach((el, index) => {
+        el.setAttribute("class", el.getAttribute("class").replace("selectedNode", null));
+    });
+
+    // Run the renderer. This is what draws the final graph.
+    render(d3.select("svg g"), g);
+
+    //выделение всех нод попавших выделенные ноды
+    nodesList.forEach((node, i) => {
+        state.selectedNodesVariantData[state.currentStep].map((selected_node, j) => {
+            if (selected_node === i) {
+                node.setAttribute("class", node.getAttribute("class") + " selectedNode");
+            }
+        });
+    });
+
+    // Center the graph
+    let xCenterOffset = (svg.attr("width") - g.graph().width) / 2;
+    let yCenterOffset = (svg.attr("height") - g.graph().height) / 2;
+    svgGroup.attr("transform", "translate(" + xCenterOffset + "," + yCenterOffset + ")");
+}
+
 function init_lab() {
+    const appInstance = App();
     return {
         setletiant: function (str) {
         },
@@ -241,7 +372,6 @@ function init_lab() {
             //     " " + document.getElementById("previousSolution").value;
             // this.div.innerHTML = window;
 
-            const appInstance = App();
             const root = document.getElementById('jsLab');
 
             // основная функция для рендеринга
@@ -258,6 +388,7 @@ function init_lab() {
                 };
 
                 renderTemplate(root, getHTML(templateData));
+                renderDag(state, appInstance);
                 bindActionListeners(appInstance);
             };
 
@@ -271,7 +402,7 @@ function init_lab() {
         getCondition: function () {
         },
         getResults: function () {
-            return "results"
+            return appInstance.state.getState();
         },
         calculateHandler: function (text, code) {
         },

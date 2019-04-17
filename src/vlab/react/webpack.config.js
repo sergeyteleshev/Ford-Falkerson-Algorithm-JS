@@ -47,7 +47,7 @@ const config = {
 };
 if (NODE_ENV === 'production') {
     config.output = {
-        filename: 'z-ford-falkerson-bundle.js',
+        filename: 'vlab.js',
         path: path.resolve(__dirname, '../WEB/js/dev/')
     };
     config.plugins.push(

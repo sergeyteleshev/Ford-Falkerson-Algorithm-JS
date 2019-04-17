@@ -29,7 +29,7 @@ export default class MainComponent extends React.Component {
                     <div className={"labBottom"}>
                         <div className={"info"}>
                             <div>
-                                <span>Текущий путь: </span>
+                                    <span>Текущий путь: </span>
                                 <span>{this.props.selectedNodesVariantData[this.props.currentStep].toString()}</span>
                             </div>
 

@@ -1,5 +1,7 @@
 package vlab.server_java.check;
 
+import jdk.nashorn.internal.parser.JSONParser;
+import org.json.JSONObject;
 import rlcp.check.ConditionForChecking;
 import rlcp.generate.GeneratingResult;
 import rlcp.server.processor.check.CheckProcessor;
@@ -17,8 +19,26 @@ public class CheckProcessorImpl implements PreCheckResultAwareCheckProcessor<Str
     @Override
     public CheckingSingleConditionResult checkSingleCondition(ConditionForChecking condition, String instructions, GeneratingResult generatingResult) throws Exception {
         //do check logic here
-        BigDecimal points = new BigDecimal(1.0);
-        String comment = "it's ok";
+        MaxFlow m = new MaxFlow();
+        String code = generatingResult.getCode();
+        JSONObject jsonObj = new JSONObject(code);
+        int[][] edges = (int[][]) jsonObj.get("edges");
+        int[] nodes = (int[]) jsonObj.get("nodes");
+
+        int maxFlow = m.fordFulkerson(edges, nodes[0], nodes[nodes.length - 1]);
+        BigDecimal points;
+        String comment;
+
+        if((int) jsonObj.get("maxFlow") == maxFlow)
+        {
+            points = new BigDecimal(1.0);
+            comment = "it's ok " + maxFlow;
+        }
+        else
+        {
+            points = new BigDecimal(0);
+            comment = "it's not ok";
+        }
 
         return new CheckingSingleConditionResult(points, comment);
     }

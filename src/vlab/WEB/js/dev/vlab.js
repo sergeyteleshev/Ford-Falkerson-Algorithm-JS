@@ -1,23 +1,21 @@
-let graph = {
-    nodes: [0, 1, 2, 3, 4, 5, 6],
+const test_graph = {
+    nodes: [0,1,2,3,4,5],
     edges: [
-        [0, 3, 0, 0, 0, 5, 0],
-        [0, 0, 2, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 2, 4],
-        [0, 2, 1, 0, 0, 0, 0],
-        [0, 0, 0, 5, 0, 0, 4],
-        [0, 0, 0, 0, 0, 0, 4],
-        [0, 0, 0, 0, 0, 0, 0],
+        [ 0, 16,  13, 0,  0,  0 ],
+        [ 0,  0, 10, 12,  0,  0 ],
+        [ 0,  0,  0,  9, 14,  0 ],
+        [ 0,  0,  0,  0,  0, 20 ],
+        [ 0,  0,  0,  7,  0,  4 ],
+        [ 0,  0,  0,  0,  0,  0 ],
     ],
     edgesBack: [
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-    ],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+    ]
 };
 
 
@@ -97,43 +95,50 @@ function fordFulkerson(graph, s, t) {
 }
 
 function getHTML(templateData) {
-    let stepButtons = "";
+    let tableData = "";
     for(let i = 0; i < templateData.currentStep + 1; i++)
     {
-        if(templateData.currentStep === i)
-        {
-            stepButtons += `<div class="stepTab-element selectTab">${i + 1}</div>`;
-        }
-        else
-        {
-            stepButtons += `<div class="stepTab-element">${i + 1}</div>`;
-        }
+        tableData += `<tr><td>${i+1}</td><td>{${templateData.selectedNodesVariantData[i]}}</td><td>${templateData.currentMinWeightData[i] ? templateData.currentMinWeightData[i] : ""}</td></tr>`;
     }
 
     return `
-        <div class="graph">
-            <div class="steps">
-                <div class="stepsTab">
-                    ${stepButtons}
+        <div class="lab">
+            <div class="lab-header">
+                <div></div>
+                <p>Алгоритм Форда-Фалкерсона</p>
+                <input type="button" class="lab-info" value="Справка"/>
+            </div>
+            <div class="lab-main">                
+                <div class="graphComponent">
+                    <svg class="graphSvg" width=700 height=500>
                 </div>
-                <input class="addStep" type="button" value="+"/>
-                <input type="button" class="minusStep" value="-">                
-            </div>
-            <div class="graphComponent">
-                <svg class="graphSvg" width=1000 height=500>
-            </div>
-            <div class="labBottom">
-                <div class="info">
-                    <div>
-                        <span>Текущий путь: </span>
-                        <span>${templateData.selectedNodesVariantData}</span>
+                <div class="steps">
+                    <div class="steps-buttons">
+                        <input class="addStep" type="button" value="+"/>
+                        <input type="button" class="minusStep" value="-">
+                    </div>  
+                    <table class="steps-table">
+                        <tr>
+                            <th>№</th>
+                            <th>Пройденный путь</th>
+                            <th>Минимальный поток</th>
+                        </tr>                        
+                        ${tableData}                                        
+                    </table>  
+                    <div class="step-number-input">
+                        <input placeholder="Минимальный вес ребра" value="${templateData.currentMinWeight}" type="number" class="textInputGray"/>
+                        <input type="button" value="Завершить" class="btnGray completeBtn"/>
                     </div>
-                    <p>Максимальный поток данного графа: ${templateData.fordFulkerson}
+                    <div class="maxFlow">
+                        <input type='number' ${!templateData.isLabComplete ? "disabled" : ""} class='maxFlow-input' value="${templateData.maxFlow}" placeholder='Максимальный поток'/>                       
+                    </div>                                                                                                                                            
+                </div>
+            </div>                                            
+            <div class="labBottom">
+                <div class="info">                   
+                    <p>Максимальный поток данного графа:
                     </p>
-                </div>
-                <div class="controlPanel">
-                    <input type="number" class="textInputGray"/>                   
-                </div>
+                </div>                
             </div>
         </div>`;
 }
@@ -142,14 +147,14 @@ function renderTemplate(element, html) {
     element.innerHTML = html;
 }
 
-function initState(graph) {
+function initState() {
     let _state = {
-        stepsVariantData: [{...graph}],
         selectedNodesVariantData: [[]],
         currentStep: 0,
         currentMinWeight: 0,
-        currentMinWeightData: [""],
-        graphSkeleton: [...graph.edges]
+        currentMinWeightData: [],
+        maxFlow: 0,
+        isLabComplete: false,
     };
 
     return {
@@ -183,28 +188,83 @@ function subscriber() {
 
 function App() {
     return {
-        state: initState(graph),
+        state: initState(),
         subscriber: subscriber(),
     }
 }
 
 function bindActionListeners(appInstance)
 {
+    document.getElementsByClassName("maxFlow-input")[0].addEventListener('change', () => {
+        const state = appInstance.state.updateState((state) => {
+            return {
+                ...state,
+                maxFlow: document.getElementsByClassName("maxFlow-input")[0].value,
+            }
+        });
+
+        appInstance.subscriber.emit('render', state);
+    });
+
+    document.getElementsByClassName("completeBtn")[0].addEventListener('click', () => {
+        const state = appInstance.state.updateState((state) => {
+
+            return {
+                ...state,
+                isLabComplete: !state.isLabComplete,
+            };
+        });
+
+        appInstance.subscriber.emit('render', state);
+    });
+
     document.getElementsByClassName("addStep")[0].addEventListener('click', () => {
         // обновляем стейт приложение
         const state = appInstance.state.updateState((state) => {
-            const currentStep = state.currentStep += 1;
-            const stepsVariantData = JSON.parse(JSON.stringify(state.stepsVariantData[0]));
+            const currentStep = state.currentStep + 1;
+            const stepsVariantData = JSON.parse(JSON.stringify(state.stepsVariantData[state.currentStep]));
+            const nodesPath = state.selectedNodesVariantData[state.currentStep];
+            const minEdgeWeight = state.currentMinWeight;
+            const currentMinWeightData = [...state.currentMinWeightData];
+            currentMinWeightData.push(minEdgeWeight);
+
+            for (let i = 0; i < nodesPath.length - 1; i++)
+            {
+                if(nodesPath[i] < nodesPath[i+1])
+                {
+                    stepsVariantData.edges[nodesPath[i]][nodesPath[i+1]] -= +minEdgeWeight;
+                    stepsVariantData.edgesBack[nodesPath[i]][nodesPath[i+1]] += +minEdgeWeight;
+                }
+                else
+                {
+                    stepsVariantData.edges[nodesPath[i+1]][nodesPath[i]] += +minEdgeWeight;
+                    stepsVariantData.edgesBack[nodesPath[i+1]][nodesPath[i]] -= +minEdgeWeight;
+                }
+            }
 
             return  {
                 ...state,
                 currentStep,
                 stepsVariantData: [...state.stepsVariantData, stepsVariantData],
                 selectedNodesVariantData: [...state.selectedNodesVariantData, []],
+                currentMinWeight: 0,
+                currentMinWeightData,
             }
         });
 
         // перересовываем приложение
+        appInstance.subscriber.emit('render', state);
+        renderDag(state, appInstance);
+    });
+
+    document.getElementsByClassName("textInputGray")[0].addEventListener('change', () => {
+        const state = appInstance.state.updateState((state) => {
+            return {
+                ...state,
+                currentMinWeight: document.getElementsByClassName("textInputGray")[0].value,
+            };
+        });
+
         appInstance.subscriber.emit('render', state);
         renderDag(state, appInstance);
     });
@@ -214,14 +274,21 @@ function bindActionListeners(appInstance)
         const state = appInstance.state.updateState((state) => {
             if(state.currentStep > 0)
             {
-                const currentStep = state.currentStep -= 1;
                 let stepsVariantData = JSON.parse(JSON.stringify(state.stepsVariantData));
+                let selectedNodesVariantData = JSON.parse(JSON.stringify(state.selectedNodesVariantData));
+                const currentMinWeightData = [...state.currentMinWeightData];
+                const currentMinWeight = currentMinWeightData[currentMinWeightData.length-1];
+                currentMinWeightData.pop();
                 stepsVariantData.pop();
+                selectedNodesVariantData.pop();
 
                 return  {
                     ...state,
-                    currentStep,
-                    stepsVariantData: stepsVariantData,
+                    currentStep: state.currentStep - 1,
+                    stepsVariantData,
+                    selectedNodesVariantData,
+                    currentMinWeightData,
+                    currentMinWeight
                 }
             }
 
@@ -235,30 +302,13 @@ function bindActionListeners(appInstance)
         renderDag(state, appInstance);
     });
 
-    document.getElementsByClassName("stepTab-element")[0].addEventListener('click', () => {
-        const state = appInstance.state.updateState((state) => {
-            console.log(document.getElementsByClassName("stepTab-element"), 'val');
-            return  {
-                ...state,
-            }
-        });
-
-        appInstance.subscriber.emit('render', state);
-    });
-
-    document.getElementsByClassName("stepTab-element")[0].addEventListener('click', () => {
-
-    });
-
     let svg = d3.select("svg");
     let nodesList = svg.selectAll("g.node")._groups[0];
 
     nodesList.forEach((el, index) => {
         el.addEventListener('click', () => {
             const state = appInstance.state.updateState((state) => {
-                console.log(el);
                 let newNodeValue = +el.textContent;
-                console.log(newNodeValue);
                 let selectedNodesCopy = [...state.selectedNodesVariantData[state.currentStep]];
 
                 //если точка уже в нашем пути, то удалить её, если она не разделяет наш путь на два и более несвязных путей
@@ -372,6 +422,37 @@ function init_lab() {
             //     " " + document.getElementById("previousSolution").value;
             // this.div.innerHTML = window;
 
+            if(document.getElementById("preGeneratedCode"))
+            {
+                if(document.getElementById("preGeneratedCode").value !== "")
+                {
+                    const state = appInstance.state.updateState((state) => {
+                        console.log(document.getElementById("preGeneratedCode").value, 'beforeParse');
+                        let graph = JSON.parse(document.getElementById("preGeneratedCode").value);
+                        console.log(graph);
+                        return {
+                            ...state,
+                            stepsVariantData: [{...graph}],
+                            graphSkeleton: [...graph.edges],
+                        }
+                    });
+                }
+
+                //appInstance.subscriber.emit('render', state);
+            }
+            else
+            {
+                const state = appInstance.state.updateState((state) => {
+                    return {
+                        ...state,
+                        stepsVariantData: [{...test_graph}],
+                        graphSkeleton: [...test_graph.edges],
+                    }
+                });
+
+                //appInstance.subscriber.emit('render', appInstance.state.getState());
+            }
+
             const root = document.getElementById('jsLab');
 
             // основная функция для рендеринга
@@ -379,12 +460,11 @@ function init_lab() {
                 console.log('state', state);
                 const templateData = {
                     currentStep: state.currentStep,
-                    selectedNodesVariantData: state.selectedNodesVariantData[state.currentStep],
-                    fordFulkerson: fordFulkerson(
-                        state.graphSkeleton,
-                        state.stepsVariantData[state.currentStep].nodes[0],
-                        state.stepsVariantData[state.currentStep].nodes[state.stepsVariantData[state.currentStep].nodes.length - 1]
-                    )
+                    currentMinWeight: state.currentMinWeight,
+                    selectedNodesVariantData: state.selectedNodesVariantData,
+                    currentMinWeightData: state.currentMinWeightData,
+                    isLabComplete: state.isLabComplete,
+                    maxFlow: state.maxFlow,
                 };
 
                 renderTemplate(root, getHTML(templateData));

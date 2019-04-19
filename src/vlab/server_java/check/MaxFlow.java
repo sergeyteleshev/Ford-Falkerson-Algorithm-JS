@@ -9,7 +9,7 @@ class MaxFlow
     /* Returns true if there is a path from source 's' to sink
     't' in residual graph. Also fills parent[] to store the
     path */
-    boolean bfs(int rGraph[][], int s, int t, int parent[])
+    boolean bfs(int[][] rGraph, int s, int t, int parent[])
     {
         int V = rGraph.length;
         // Create a visited array and mark all vertices as not
@@ -47,7 +47,7 @@ class MaxFlow
     }
 
     // Returns tne maximum flow from s to t in the given graph
-    int fordFulkerson(int graph[][], int s, int t)
+    int fordFulkerson(int[][] graph, int s, int t)
     {
         int u, v;
         int V = graph.length;
@@ -60,7 +60,7 @@ class MaxFlow
         // residual capacity of edge from i to j (if there
         // is an edge. If rGraph[i][j] is 0, then there is
         // not)
-        int rGraph[][] = new int[V][V];
+        int[][] rGraph = new int[V][V];
 
         for (u = 0; u < V; u++)
             for (v = 0; v < V; v++)

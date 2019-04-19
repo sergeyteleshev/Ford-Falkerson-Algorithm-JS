@@ -59,6 +59,7 @@ public class GenerateProcessorImpl implements GenerateProcessor {
         graph.put("edgesBack", edgesBack);
 
         code = graph.toString();
+        text = "найдите максимальный поток из вершины " + Integer.toString(nodes[0]) + " в вершину  " + Integer.toString(nodes.length - 1);
 
         return new GeneratingResult(text, code, instructions);
     }

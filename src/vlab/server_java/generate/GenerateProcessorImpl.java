@@ -14,11 +14,12 @@ public class GenerateProcessorImpl implements GenerateProcessor {
     @Override
     public GeneratingResult generate(String condition) {
         //do Generate logic here
-        String text = "text";
-        String code = "code";
+        String text;
+        String code;
         String instructions = "instructions";
         int maxNodes = 7;
         int maxEdgeValue = 15;
+        int minEdgesNumberFromNode = 2;
         int[][] edges = new int[maxNodes][maxNodes];
         int[][] edgesBack = new int[maxNodes][maxNodes];
         int[] nodes = new int[maxNodes];

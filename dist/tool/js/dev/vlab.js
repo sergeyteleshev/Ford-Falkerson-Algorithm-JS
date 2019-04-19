@@ -103,43 +103,50 @@ function getHTML(templateData) {
 
     return `
         <div class="lab">
-            <div class="lab-header">
-                <div></div>
-                <p>Алгоритм Форда-Фалкерсона</p>
-                <input type="button" class="lab-info" value="Справка"/>
-            </div>
-            <div class="lab-main">                
-                <div class="graphComponent">
-                    <svg class="graphSvg" width=700 height=500>
-                </div>
-                <div class="steps">
-                    <div class="steps-buttons">
-                        <input class="addStep" type="button" value="+"/>
-                        <input type="button" class="minusStep" value="-">
-                    </div>  
-                    <table class="steps-table">
-                        <tr>
-                            <th>№</th>
-                            <th>Пройденный путь</th>
-                            <th>Минимальный поток</th>
-                        </tr>                        
-                        ${tableData}                                        
-                    </table>  
-                    <div class="step-number-input">
-                        <input placeholder="Минимальный вес ребра" value="${templateData.currentMinWeight}" type="number" class="textInputGray"/>
-                        <input type="button" value="Завершить" class="btnGray completeBtn"/>
-                    </div>
-                    <div class="maxFlow">
-                        <input type='number' ${!templateData.isLabComplete ? "disabled" : ""} class='maxFlow-input' value="${templateData.maxFlow}" placeholder='Максимальный поток'/>                       
-                    </div>                                                                                                                                            
-                </div>
-            </div>                                            
-            <div class="labBottom">
-                <div class="info">                   
-                    <p>Максимальный поток данного графа:
-                    </p>
-                </div>                
-            </div>
+            <table class="lab-table">
+                <tr>
+                    <td colspan="2">
+                        <div class="lab-header">
+                            <div></div>
+                            <span>Алгоритм нахождения максимального потока графа на основе метода Форда-Фалкерсона</span>
+                            <input type="button" class="btn btn-info" value="Справка"/>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="graphComponent">
+                            <svg class="graphSvg" width=700 height=500>
+                        </div>
+                    </td>
+                    <td class="step-td">
+                        <div class="steps">
+                            <div class="steps-buttons">
+                                <input class="addStep btn btn-success" type="button" value="+"/>
+                                <input type="button" class="minusStep btn btn-danger" value="-">
+                            </div>  
+                            <table class="steps-table">
+                                <tr>
+                                    <th>№</th>
+                                    <th>Пройденный путь</th>
+                                    <th>Минимальный поток итерации</th>
+                                </tr>                        
+                                ${tableData}                                        
+                            </table>  
+                            <div class="step-number-input">
+                                <span>Минимальный поток текущей итерации:</span>
+                                <input placeholder="Минимальный вес ребра из пути" value="${templateData.currentMinWeight}" type="number" class="textInputGray"/>
+                                
+                                <input type="button" value="Завершить" class="btnGray completeBtn"/>
+                            </div>
+                            <div class="maxFlow">
+                                <span>Максимальный поток графа:</span>
+                                <input type='number' ${!templateData.isLabComplete ? "disabled" : ""} class='maxFlow-input' value="${templateData.maxFlow}" placeholder='Максимальный поток'/>                       
+                            </div>                                                                                                                                            
+                        </div>
+                    </td>
+                </tr>
+            </table>                                                                  
         </div>`;
 }
 
@@ -276,8 +283,8 @@ function bindActionListeners(appInstance)
             {
                 let stepsVariantData = JSON.parse(JSON.stringify(state.stepsVariantData));
                 let selectedNodesVariantData = JSON.parse(JSON.stringify(state.selectedNodesVariantData));
-                const currentMinWeightData = [...state.currentMinWeightData];
-                const currentMinWeight = currentMinWeightData[currentMinWeightData.length-1];
+                let currentMinWeightData = [...state.currentMinWeightData];
+                let currentMinWeight = currentMinWeightData[currentMinWeightData.length-1];
                 currentMinWeightData.pop();
                 stepsVariantData.pop();
                 selectedNodesVariantData.pop();

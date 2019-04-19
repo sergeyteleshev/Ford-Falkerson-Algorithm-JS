@@ -42,10 +42,10 @@
     /*border-spacing: 0;*/
 /*}*/
 
-/*body*/
-/*{*/
-    /*font-family: Calibri, serif;*/
-/*}*/
+body
+{
+    font-family: Calibri, serif;
+}
 
 .node rect,
 .node circle,
@@ -65,6 +65,8 @@
 {
     display: inline-flex;
     align-items: center;
+    justify-content: space-between;
+    width: 100px;
     background: white;
     text-align: center;
 }
@@ -72,33 +74,14 @@
 .addStep, .minusStep
 {
     text-align: center;
-    margin-left: 10px;
     width: 35px;
     height: 35px;
     border-radius: 5px;
-    border: none;
-    cursor: pointer;
-    color: white;
 }
 
 .minusStep
 {
-    background-color: #cb342b;
-}
-
-.minusStep:hover
-{
-    background-color: #fa342b;
-}
-
-.addStep
-{
-    background-color: #439847;
-}
-
-.addStep:hover
-{
-    background-color: #43ad47;
+    margin-left: 10px;
 }
 
 .stepTab-element:hover
@@ -178,6 +161,7 @@
     padding: 10px;
     border-radius: 4px;
     border: none;
+    cursor: pointer;
 }
 
 .steps-table td, .steps-table th
@@ -200,16 +184,27 @@
     height: 100%;
 }
 
-.steps-table, .steps-table td, .steps-table th
+.lab-table tr td
 {
-    border: 1px solid black;
+    padding: 5px 5px;
+}
+
+.lab-table, .lab-table td, .lab-table th
+{
+    border: 2px solid #e1e1e1;
     border-collapse: collapse;
+}
+
+.step-td
+{
+    vertical-align: top;
 }
 
 .steps
 {
+    margin: 20px auto;
     padding: 0 50px;
-    width: 80%;
+    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -228,10 +223,12 @@
 
 .step-number-input
 {
-    display: inline-flex;
-    align-items: center;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     margin-top: 20px;
     width: 100%;
+    height: 130px;
     justify-content: space-between;
 }
 
@@ -250,11 +247,13 @@
 
 .textInputGray
 {
+    width: 100%;
     padding: 5px 10px;
 }
 
 .btnGray
 {
+    width: 100%;
     cursor: pointer;
     border: 2px solid #e1e1e1;
     background: #e6e6e6;
@@ -269,9 +268,9 @@
 
 .graphSvg
 {
-    border: 2px solid #e6e6e6;
-    width: 100%;
-    height: 100%;
+    /*border: 2px solid #e6e6e6;*/
+    width: auto;
+    height: auto;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -281,4 +280,10 @@
     stroke: #333;
     fill: #333;
     stroke-width: 1.5px;
+}
+
+.steps-table, .steps-table td, .steps-table th
+{
+    border: 1px solid black;
+    border-collapse: collapse;
 }

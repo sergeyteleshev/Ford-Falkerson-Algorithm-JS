@@ -20,6 +20,7 @@ public class GenerateProcessorImpl implements GenerateProcessor {
         int maxNodes = 7;
         int maxEdgeValue = 15;
         int minEdgesNumberFromNode = 2;
+        int maxEdgesNumberFromNode = 4;
         int[][] edges = new int[maxNodes][maxNodes];
         int[][] edgesBack = new int[maxNodes][maxNodes];
         int[] nodes = new int[maxNodes];
@@ -33,25 +34,32 @@ public class GenerateProcessorImpl implements GenerateProcessor {
 
         for (int i = 0; i < edges.length; i++)
         {
-            for (int j = 0; j < edges[i].length; j++)
+            int currentEdgesNumberFromNode = minEdgesNumberFromNode + (int)(Math.random() * ((maxEdgesNumberFromNode - minEdgesNumberFromNode) + 1));
+            while (currentEdgesNumberFromNode > 0)
             {
-                if(j > i)
+                for (int j = 0; j < edges[i].length; j++)
                 {
-                    if(random.nextBoolean())
+                    if(j > i && edges[i][j] == 0)
                     {
-                        edges[i][j] = random.nextInt(maxEdgeValue);
+                        if(random.nextBoolean())
+                        {
+                            edges[i][j] = random.nextInt(maxEdgeValue);
+                        }
+                        else
+                        {
+                            edges[i][j] = 0;
+                        }
                     }
                     else
                     {
                         edges[i][j] = 0;
                     }
-                }
-                else
-                {
-                    edges[i][j] = 0;
-                }
 
-                edgesBack[i][j] = 0;
+                    edgesBack[i][j] = 0;
+
+                    //todo нарисовать красивый граф
+                    currentEdgesNumberFromNode--;
+                }
             }
         }
 

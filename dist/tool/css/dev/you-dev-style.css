@@ -277,7 +277,7 @@ body
 }
 
 .edgePath path {
-    stroke: #333;
+    stroke: #e1e1e1;
     fill: #333;
     stroke-width: 1.5px;
 }

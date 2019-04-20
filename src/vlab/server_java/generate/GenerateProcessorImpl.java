@@ -20,10 +20,10 @@ public class GenerateProcessorImpl implements GenerateProcessor {
         String text;
         String code;
         String instructions = "instructions";
-        int maxNodes = 5; //всего вершин в графе
+        int maxNodes = 6 ; //всего вершин в графе
         int maxEdgeValue = 15; //максимально возможный вес ребра
-        int minEdgesNumberFromNode = 1; //сколько минимум из одной вершины должно выходить рёбер
-        int maxEdgesNumberFromNode = 3; //сколько максимум из ондйо вершины должно выходить рёбер
+        int minEdgesNumberFromNode = 2; //сколько минимум из одной вершины должно выходить рёбер
+        int maxEdgesNumberFromNode = 4; //сколько максимум из ондйо вершины должно выходить рёбер
         int[][] edges = new int[maxNodes][maxNodes];
         int[][] edgesBack = new int[maxNodes][maxNodes];
         int[] nodes = new int[maxNodes];
@@ -54,12 +54,8 @@ public class GenerateProcessorImpl implements GenerateProcessor {
                         {
                             edges[i][j] = random.nextInt(maxEdgeValue);
                             currentEdgesNumberFromNode--;
-                            if(currentEdgesNumberFromNode == 0)
-                                break;
                         }
                     }
-
-                    edgesBack[i][j] = 0;
                 }
             }
         }
@@ -69,7 +65,7 @@ public class GenerateProcessorImpl implements GenerateProcessor {
         graph.put("edgesBack", edgesBack);
 
         code = graph.toString();
-        text = "найдите максимальный поток из вершины " + Integer.toString(nodes[0]) + " в вершину  " + Integer.toString(nodes.length - 1);
+        text = "Найдите максимальный поток из вершины " + Integer.toString(nodes[0]) + " в вершину  " + Integer.toString(nodes.length - 1);
 
         return new GeneratingResult(text, code, instructions);
     }

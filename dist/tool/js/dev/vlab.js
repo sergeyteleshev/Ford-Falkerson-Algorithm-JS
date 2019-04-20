@@ -18,82 +18,6 @@ const test_graph = {
     ]
 };
 
-
-function bfs(rGraph, s, t, parent) {
-    var visited = [];
-    var queue = [];
-    var V = rGraph.length;
-    // Create a visited array and mark all vertices as not visited
-    for (var i = 0; i < V; i++) {
-        visited[i] = false;
-    }
-    // Create a queue, enqueue source vertex and mark source vertex as visited
-    queue.push(s);
-    visited[s] = true;
-    parent[s] = -1;
-
-    while (queue.length != 0) {
-        var u = queue.shift();
-        for (var v = 0; v < V; v++) {
-            if (visited[v] == false && rGraph[u][v] > 0) {
-                queue.push(v);
-                parent[v] = u;
-                visited[v] = true;
-            }
-        }
-    }
-    //If we reached sink in BFS starting from source, then return true, else false
-    return (visited[t] == true);
-}
-
-function fordFulkerson(graph, s, t) {
-    /* Create a residual graph and fill the residual graph
-     with given capacities in the original graph as
-     residual capacities in residual graph
-     Residual graph where rGraph[i][j] indicates
-     residual capacity of edge from i to j (if there
-     is an edge. If rGraph[i][j] is 0, then there is
-     not)
-    */
-    if (s < 0 || t < 0 || s > graph.length - 1 || t > graph.length - 1) {
-        throw new Error("Ford-Fulkerson-Maximum-Flow :: invalid sink or source");
-    }
-    if (graph.length === 0) {
-        throw new Error("Ford-Fulkerson-Maximum-Flow :: invalid graph");
-    }
-    var rGraph = [];
-    for (var u = 0; u < graph.length; u++) {
-        var temp = [];
-        if (graph[u].length !== graph.length) {
-            throw new Error("Ford-Fulkerson-Maximum-Flow :: invalid graph. graph needs to be NxN");
-        }
-        for (v = 0; v < graph.length; v++) {
-            temp.push(graph[u][v]);
-        }
-        rGraph.push(temp);
-    }
-    var parent = [];
-    var maxFlow = 0;
-
-    while (bfs(rGraph, s, t, parent)) {
-        var pathFlow = Number.MAX_VALUE;
-        for (var v = t; v != s; v = parent[v]) {
-            u = parent[v];
-            pathFlow = Math.min(pathFlow, rGraph[u][v]);
-        }
-        for (v = t; v != s; v = parent[v]) {
-            u = parent[v];
-            rGraph[u][v] -= pathFlow;
-            rGraph[v][u] += pathFlow;
-        }
-
-
-        maxFlow += pathFlow;
-    }
-    // Return the overall flow
-    return maxFlow;
-}
-
 function getHTML(templateData) {
     let tableData = "";
     for(let i = 0; i < templateData.currentStep + 1; i++)
@@ -109,7 +33,47 @@ function getHTML(templateData) {
                         <div class="lab-header">
                             <div></div>
                             <span>Алгоритм нахождения максимального потока графа на основе метода Форда-Фалкерсона</span>
-                            <input type="button" class="btn btn-info" value="Справка"/>
+                            <!-- Button trigger modal -->
+                            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModalScrollable">
+                              Справка
+                            </button>
+                            
+                            <!-- Modal -->
+                            <div class="modal fade" id="exampleModalScrollable" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+                              <div class="modal-dialog modal-dialog-scrollable" role="document">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalScrollableTitle">Справка по интерфейсу лабораторной работы</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                      <span aria-hidden="true">&times;</span>
+                                    </button>
+                                  </div>
+                                  <div class="modal-body">
+                                        <p><b>Алгоритм работы с интерфейсом:</b></p>
+                                        <p>
+                                            1) Для того, чтобы начать строить путь из истока к стоку, нужно кликнуть на исток. Путь может начинаться только из него.                                            
+                                            Далее нужно включить в текущий путь только те вершины, в которые есть ребро с <u>не</u> нулевым весом. Если вес <u>равен</u> нулю(в любую из сторон), то 
+                                            лабораторная работа не позволит вам выделить эту вершину.
+                                        </p>
+                                        <p>
+                                            2) После того как путь построен нужно в текстовом поле "минимальный поток текущей итерации" ввести то, что требуется и нажать на "+". Тем самым вы перейдёте на следующую итерацию алгоритма.
+                                        </p>
+                                        <p>
+                                            3) Повторять шаги 2 и 3 до тех пор пока существует путь из истока к стоку.
+                                        </p>
+                                        <p>
+                                            4) После того как путей больше нет, необходимо нажать на кнопку "завершить". Тем самым разблокируется текстовое поле "Максимальный поток графа", и можно будет ввести полученный ответ.                                        
+                                        </p>
+                                        <p>
+                                            5) Чтобы завершить лабораторную работу, нужно нажать кнопку "отправить".
+                                        </p>
+                                        <p><b>Примечание:</b></p>
+                                        <p>1) После ввода значений в текстовые поля кнопки не кликаются с первого раза, так как фокус остаётся на текстовом поле. Первым кликом(в любое место окна ЛР) нужно убрать фокус, а затем нажать на нужную кнопку</p>
+                                        <p>2) После нажатия кнопки "завершить" весь остальной интерфейс остаётся кликабельным, так что стоит быть аккуратнее, чтобы не "сбить" результат работы.</p>
+                                  </div>                                 
+                                </div>
+                              </div>
+                            </div>                           
                         </div>
                     </td>
                 </tr>
@@ -146,7 +110,7 @@ function getHTML(templateData) {
                         </div>
                     </td>
                 </tr>
-            </table>                                                                  
+            </table>                                                                         
         </div>`;
 }
 
@@ -215,7 +179,6 @@ function bindActionListeners(appInstance)
 
     document.getElementsByClassName("completeBtn")[0].addEventListener('click', () => {
         const state = appInstance.state.updateState((state) => {
-
             return {
                 ...state,
                 isLabComplete: !state.isLabComplete,
@@ -354,12 +317,6 @@ function bindActionListeners(appInstance)
     });
 }
 
-function unbindActionListeners() {
-    document.getElementsByClassName("addStep")[0].removeEventListener('click', () => {});
-    document.getElementsByClassName("textInputGray")[0].removeEventListener('change', () => {});
-    document.getElementsByClassName("minusStep")[0].removeEventListener('click', () => {});
-}
-
 function renderDag(state, appInstance) {
     // Create the input graph
     let g = new dagreD3.graphlib.Graph()
@@ -427,15 +384,6 @@ function init_lab() {
 
         //Инициализация ВЛ
         init: function () {
-            // this.div = document.getElementById("jsLab");
-            // this.div.innerHTML = this.window;
-            // document.getElementById("tool").innerHTML = this.tool;
-            //получение варианта задания
-            // let ins = document.getElementById("preGeneratedCode").value + " " + document.getElementById("calculatedCode").value +
-            //     " " + document.getElementById("previousSolution").value;
-            // this.div.innerHTML = window;
-            initState();
-
             if(document.getElementById("preGeneratedCode"))
             {
                 if(document.getElementById("preGeneratedCode").value !== "")

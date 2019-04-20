@@ -287,3 +287,8 @@ body
     border: 1px solid black;
     border-collapse: collapse;
 }
+
+.hideDiv
+{
+    display: none;
+}

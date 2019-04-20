@@ -4,7 +4,10 @@ import org.json.JSONObject;
 import rlcp.generate.GeneratingResult;
 import rlcp.server.processor.generate.GenerateProcessor;
 
+import java.sql.SQLOutput;
+import java.util.Arrays;
 import java.util.Random;
+import java.util.logging.SocketHandler;
 
 /**
  * Simple GenerateProcessor implementation. Supposed to be changed as needed to
@@ -35,32 +38,36 @@ public class GenerateProcessorImpl implements GenerateProcessor {
         for (int i = 0; i < edges.length; i++)
         {
             int currentEdgesNumberFromNode = minEdgesNumberFromNode + (int)(Math.random() * ((maxEdgesNumberFromNode - minEdgesNumberFromNode) + 1));
-            while (currentEdgesNumberFromNode > 0)
+
+            System.out.println("before");
+            System.out.println(currentEdgesNumberFromNode);
+
+            if(currentEdgesNumberFromNode >= edges[i].length - i - 1)
             {
-                for (int j = 0; j < edges[i].length; j++)
+                currentEdgesNumberFromNode = edges[i].length - i - 1;
+            }
+
+            while(currentEdgesNumberFromNode > 0)
+            {
+                for (int j = i+1; j < edges[i].length; j++)
                 {
-                    if(j > i && edges[i][j] == 0)
+                    if(edges[i][j] == 0)
                     {
                         if(random.nextBoolean())
                         {
                             edges[i][j] = random.nextInt(maxEdgeValue);
+                            currentEdgesNumberFromNode--;
+                            if(currentEdgesNumberFromNode == 0)
+                                break;
                         }
-                        else
-                        {
-                            edges[i][j] = 0;
-                        }
-                    }
-                    else
-                    {
-                        edges[i][j] = 0;
                     }
 
                     edgesBack[i][j] = 0;
-
-                    //todo нарисовать красивый граф
-                    currentEdgesNumberFromNode--;
                 }
             }
+
+            System.out.println("after");
+            System.out.println(currentEdgesNumberFromNode);
         }
 
         graph.put("nodes", nodes);

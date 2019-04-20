@@ -428,6 +428,7 @@ function init_lab() {
             // let ins = document.getElementById("preGeneratedCode").value + " " + document.getElementById("calculatedCode").value +
             //     " " + document.getElementById("previousSolution").value;
             // this.div.innerHTML = window;
+            initState();
 
             if(document.getElementById("preGeneratedCode"))
             {

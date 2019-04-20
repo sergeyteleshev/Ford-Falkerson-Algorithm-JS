@@ -354,6 +354,12 @@ function bindActionListeners(appInstance)
     });
 }
 
+function unbindActionListeners() {
+    document.getElementsByClassName("addStep")[0].removeEventListener('click', () => {});
+    document.getElementsByClassName("textInputGray")[0].removeEventListener('change', () => {});
+    document.getElementsByClassName("minusStep")[0].removeEventListener('click', () => {});
+}
+
 function renderDag(state, appInstance) {
     // Create the input graph
     let g = new dagreD3.graphlib.Graph()

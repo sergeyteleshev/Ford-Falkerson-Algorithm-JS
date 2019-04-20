@@ -215,7 +215,6 @@ function bindActionListeners(appInstance)
 
     document.getElementsByClassName("completeBtn")[0].addEventListener('click', () => {
         const state = appInstance.state.updateState((state) => {
-
             return {
                 ...state,
                 isLabComplete: !state.isLabComplete,

@@ -20,10 +20,10 @@ public class GenerateProcessorImpl implements GenerateProcessor {
         String text;
         String code;
         String instructions = "instructions";
-        int maxNodes = 7;
-        int maxEdgeValue = 15;
-        int minEdgesNumberFromNode = 2;
-        int maxEdgesNumberFromNode = 4;
+        int maxNodes = 5; //всего вершин в графе
+        int maxEdgeValue = 15; //максимально возможный вес ребра
+        int minEdgesNumberFromNode = 1; //сколько минимум из одной вершины должно выходить рёбер
+        int maxEdgesNumberFromNode = 3; //сколько максимум из ондйо вершины должно выходить рёбер
         int[][] edges = new int[maxNodes][maxNodes];
         int[][] edgesBack = new int[maxNodes][maxNodes];
         int[] nodes = new int[maxNodes];
@@ -38,9 +38,6 @@ public class GenerateProcessorImpl implements GenerateProcessor {
         for (int i = 0; i < edges.length; i++)
         {
             int currentEdgesNumberFromNode = minEdgesNumberFromNode + (int)(Math.random() * ((maxEdgesNumberFromNode - minEdgesNumberFromNode) + 1));
-
-            System.out.println("before");
-            System.out.println(currentEdgesNumberFromNode);
 
             if(currentEdgesNumberFromNode >= edges[i].length - i - 1)
             {
@@ -65,9 +62,6 @@ public class GenerateProcessorImpl implements GenerateProcessor {
                     edgesBack[i][j] = 0;
                 }
             }
-
-            System.out.println("after");
-            System.out.println(currentEdgesNumberFromNode);
         }
 
         graph.put("nodes", nodes);

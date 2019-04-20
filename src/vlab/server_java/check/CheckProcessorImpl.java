@@ -17,6 +17,8 @@ import java.util.Arrays;
  * necessary Check method support.
  */
 public class CheckProcessorImpl implements PreCheckResultAwareCheckProcessor<String> {
+    private static MaxFlow m = new MaxFlow();
+
     private static int[] JSonArray2IntArray(JSONArray jsonArray){
         int[] intArray = new int[jsonArray.length()];
         for (int i = 0; i < intArray.length; ++i) {
@@ -57,19 +59,7 @@ public class CheckProcessorImpl implements PreCheckResultAwareCheckProcessor<Str
             }
         }
 
-        System.out.println("KEK");
-        System.out.println(Arrays.deepToString(edges));
-        System.out.println(Arrays.deepToString(edgesBack));
-
         return maxFlow == answer;
-    }
-
-    public static boolean checkMaxFlow(int answer, int[][] edges, int nodes[])
-    {
-        MaxFlow m = new MaxFlow();
-        int maxFlow = m.fordFulkerson(edges, nodes[0], nodes[nodes.length - 1]);
-
-        return answer == maxFlow;
     }
 
     @Override
@@ -89,6 +79,10 @@ public class CheckProcessorImpl implements PreCheckResultAwareCheckProcessor<Str
         int[][] edgesBack = new int[nodes.length][nodes.length];
         int[][] selectedNodesVariantData = new int[objSelectedNodesVariantData.length() - 1][];
 
+        BigDecimal points;
+        String comment;
+        double countPoints = 0;
+
         for(int i = 0; i < selectedNodesVariantData.length; i++)
         {
             selectedNodesVariantData[i] = JSonArray2IntArray(objSelectedNodesVariantData.getJSONArray(i));
@@ -100,22 +94,30 @@ public class CheckProcessorImpl implements PreCheckResultAwareCheckProcessor<Str
             edgesBack[i] = JSonArray2IntArray(objEdgesBack.getJSONArray(i));
         }
 
+        int answerMaxFlow = jsonInstructions.getInt("maxFlow");
+        int maxFlow = m.fordFulkerson(edges, nodes[0], nodes[nodes.length - 1]);
 
-        BigDecimal points;
-        String comment;
-
-//        checkSelectedNodesData(jsonInstructions.getInt("maxFlow"), selectedNodesVariantData, edges, edgesBack);
-//        if(checkMaxFlow(jsonInstructions.getInt("maxFlow"), edges, nodes))
-        if(checkSelectedNodesData(jsonInstructions.getInt("maxFlow"), selectedNodesVariantData, edges, edgesBack))
+        if(checkSelectedNodesData(maxFlow, selectedNodesVariantData, edges, edgesBack))
         {
-            points = new BigDecimal(1.0);
-            comment = "it's ok";
+            countPoints += 0.8;
+            comment = "1) Итерации выполнены верно";
         }
         else
         {
-            points = new BigDecimal(0);
-            comment = "it's not ok" + Arrays.deepToString(selectedNodesVariantData);
+            comment = "1) Пути построены неправильно";
         }
+
+        if(maxFlow == answerMaxFlow)
+        {
+            countPoints += 0.2;
+            comment += "\n 2) Максимальный поток посчитан правильно";
+        }
+        else
+        {
+            comment += "\n 2) Максимальный поток посчитан НЕ правильно";
+        }
+
+        points = new BigDecimal(countPoints);
 
         return new CheckingSingleConditionResult(points, comment);
     }
